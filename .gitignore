@@ -11,10 +11,12 @@ nbproject/*
 *.war
 *.ear
 
-/Project/Applet1/build/built-jar.properties
-/Project/Lib1/build/built-jar.properties
-/Project/WebApplication/build/generated/src/org/apache/jsp/index_jsp.class.smap
-/Project/WebApplication/build/generated/src/org/apache/jsp/index_jsp.java
-/Project/WebApplication/build/web/WEB-INF/classes/.netbeans_automatic_build
-/Project/WebApplication/build/web/WEB-INF/classes/.netbeans_update_resources
-/Project/WebApplication/build/web/WEB-INF/glassfish-web.xml
+/Project/Applet1/nbproject/private/
+/Project/Lib1/nbproject/private/
+/Project/WebApplication/nbproject/private/
+/Project/WebApplication/build/
+/Project/Applet1/dist/
+/Project/Applet1/build/
+/Project/Lib1/dist/
+/Project/Lib1/build/
+/Project/WebApplication/dist/
