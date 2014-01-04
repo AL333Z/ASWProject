@@ -10,12 +10,12 @@
     
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Share2Me</title>
     </head>
     
     <body>
     
-        <h1>Hello World!</h1>
+        <h1>Share2Me Home</h1>
         
         <APPLET codebase="applet/" code="asw1013.ListApplet" 
                 archive="Lib1.jar,Applet1.jar" 
