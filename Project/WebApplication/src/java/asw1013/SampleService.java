@@ -8,9 +8,8 @@ import org.w3c.dom.*;
 @WebServlet(urlPatterns = {"/sampleservice"})
 public class SampleService extends AbstractXmlServiceServlet {
     
-    protected void operations(Document data, HttpServletRequest request, HttpServletResponse response, ManageXML mngXML) throws Exception {
+    protected void operations(Document data, HttpSession session, HttpServletResponse response, ManageXML mngXML) throws Exception {
                 
-        HttpSession session = request.getSession();
         //name of operation is message root
         Element root = data.getDocumentElement();
         String operation = root.getTagName();

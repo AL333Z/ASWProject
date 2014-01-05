@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.w3c.dom.Document;
 
 /**
@@ -19,22 +20,23 @@ public abstract class AbstractXmlServiceServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {        
         
+        HttpSession session = request.getSession();
+        
         InputStream is = request.getInputStream();
         response.setContentType("text/xml;charset=UTF-8");
         
         try {
-        ManageXML mngXML = new ManageXML();
-        Document data = mngXML.parse(is);
-        is.close();
-        
-        operations(data,request,response,mngXML);
+            ManageXML mngXML = new ManageXML();
+            Document data = mngXML.parse(is);
+            is.close();
 
-        }
-        catch (Exception ex){ 
+            operations(data, session, response, mngXML);
+
+        } catch (Exception ex) {
             System.out.println(ex);
         }
     }
     
-    protected abstract void operations(Document data, HttpServletRequest request, HttpServletResponse response, ManageXML mngXML) throws Exception;
+    protected abstract void operations(Document data, HttpSession session, HttpServletResponse response, ManageXML mngXML) throws Exception;
     
 }
