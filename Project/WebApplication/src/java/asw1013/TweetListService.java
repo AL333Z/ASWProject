@@ -2,12 +2,10 @@ package asw1013;
 
 import java.io.OutputStream;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -23,16 +21,17 @@ public class TweetListService extends AbstractXmlServiceServlet{
         
         Element recvRoot = data.getDocumentElement();
         // TODO get from XML the start and stop numbers of tweets to sent (pagination)
-        
-        // TODO read the XML file of tweets and marshal them (it's better to do this in a separate library class)
-        
-        // Example root element to send, replace this with something useful!!
-        Element sendRoot = mngXML.newDocument().createElement("boh");
+
+        TweetListFile tweetFile = new TweetListFile();
+        TweetList tweetList = tweetFile.readFile();
+       
+        // TODO filter from the tweetlist only the tweets that we want to send to the client
+        TweetList tweetListToSend = tweetList; //only for example
         
         JAXBContext jc = JAXBContext.newInstance(TweetList.class);
         Marshaller marsh = jc.createMarshaller();
         Document doc = mngXML.newDocument();
-        marsh.marshal(sendRoot, doc);
+        marsh.marshal(tweetListToSend, doc);
         
         OutputStream os = response.getOutputStream();
         mngXML.transform(os, doc);

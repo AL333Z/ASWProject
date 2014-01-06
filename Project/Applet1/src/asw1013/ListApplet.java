@@ -4,11 +4,12 @@ import javax.swing.JApplet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.TransformerConfigurationException;
 import org.w3c.dom.*;
 
 /**
@@ -17,12 +18,14 @@ import org.w3c.dom.*;
  */
 public class ListApplet extends JApplet {
     
-    JLabel l = new JLabel("Dai cazzo");
+    JLabel l = new JLabel("Dai cazzo!!!");
     JTextField t = new JTextField(10);
     JButton b = new JButton("send req");
 
     HTTPClient hc = new HTTPClient();
     boolean logged = false;
+    
+    JAXBContext jc = null;
 
     public void init() {
 
@@ -46,24 +49,28 @@ public class ListApplet extends JApplet {
                             try {
                                 ManageXML mngXML = new ManageXML();
                                 Document data = mngXML.newDocument();
-                                Element root = data.createElement("tweetsrequest");
-                                root.appendChild(data.createTextNode(t.getText())); // TODO put start and stop num of tweets to get (pagination)
-                                data.appendChild(root);
+                                Element rootReq = data.createElement("tweetsrequest");
+                                rootReq.appendChild(data.createTextNode(t.getText())); // TODO put start and stop num of tweets to get (pagination)
+                                data.appendChild(rootReq);
 
-                                Document answer = hc.execute("tweets", data);
-
-                                JAXBContext jc = JAXBContext.newInstance(TweetList.class);
-                                Unmarshaller u = jc.createUnmarshaller();
-                                TweetList tweetList = (TweetList) u.unmarshal(answer);
+                                String prova = "listatweet: ";
                                 
-                                for(Tweet tweet : tweetList.tweets){
-                                    // TODO add a tweet in the swing UI
-                                    l.setText(tweet.message);
+                                Document answer = hc.execute("tweets", data);
+                                NodeList tweetsList = answer.getElementsByTagName("tweets");
+                                for(int i=0; i<tweetsList.getLength(); i++){
+                                    Element tweetElem = (Element) tweetsList.item(i);
+                                    // TODO add data from this tweetElem to the swing UI
+                                    // example:
+                                    prova = prova + tweetElem.getElementsByTagName("message").item(0).getTextContent() + ", ";
                                 }
 
+                               
+                                l.setText(prova);
+                                
                                 //t.setText("");
                             } catch (Exception ex) {
                                 ex.printStackTrace();
+                                l.setText(ex.getMessage());
                             } 
                         }
                     });
@@ -73,6 +80,7 @@ public class ListApplet extends JApplet {
             });
         } catch (Exception e) {
             e.printStackTrace();
+            l.setText(e.getMessage());
         }
     }
     

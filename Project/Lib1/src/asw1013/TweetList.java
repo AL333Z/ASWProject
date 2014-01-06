@@ -1,5 +1,6 @@
 package asw1013;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,5 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class TweetList {
     
     public List<Tweet> tweets;
+       
+    public TweetList(){
+        this.tweets = new ArrayList<Tweet>();
+    }
     
 }
