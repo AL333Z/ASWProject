@@ -25,17 +25,19 @@ limitations under the License.
     padding: 0;
     margin: 0 auto;
     font-family: Arial, Helvetica, sans-serif;
+    width: 960px;
+    clear: both;
 }
 
 /** The wrapper that will contain our two forms **/
 #wrapper{
-    width: 60%;
-    right: 0px;
-    min-height: 560px;	
-    margin: 0px auto;	
-    width: 500px;
-    position: relative;	
+    width: 460px;
+    height: 380px;	
+    position: relative;
+    float: left;
+    margin: 10px;
 }
+
 /**** Styling the form elements **/
 
 /**** general text styling ****/
@@ -44,28 +46,8 @@ limitations under the License.
     text-decoration: underline;
 }
 
-#wrapper h1{
-    font-size: 48px;
-    color: rgb(6, 106, 117);
-    padding: 2px 0 10px 0;
-    font-family: 'FranchiseRegular','Arial Narrow',Arial,sans-serif;
-    font-weight: bold;
-    text-align: center;
-    padding-bottom: 30px;
-}
-/** For the moment only webkit supports the background-clip:text; */
-
-#wrapper h1:after{
-    content: ' ';
-    display: block;
-    width: 100%;
-    height: 2px;
-    margin-top: 10px;
-    background: linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%); 
-}
-
 #wrapper p{
-    margin-bottom:15px;
+    margin-bottom:5px;
 }
 #wrapper p:first-child{
     margin: 0px;
@@ -73,21 +55,6 @@ limitations under the License.
 #wrapper label{
     color: rgb(64, 92, 96);
     position: relative;
-}
-
-/**** advanced input styling ****/
-/* placeholder */
-::-webkit-input-placeholder  { 
-    color: rgb(190, 188, 188); 
-    font-style: italic;
-}
-input:-moz-placeholder,
-textarea:-moz-placeholder{ 
-    color: rgb(190, 188, 188);
-    font-style: italic;
-} 
-input {
-    outline: none;
 }
 
 /* all the input except submit and checkbox */
@@ -99,7 +66,6 @@ input {
     box-sizing : content-box;
     border-radius: 3px;
     box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
-    transition: all 0.2s linear;
 }
 #wrapper input:not([type="checkbox"]):active,
 #wrapper input:not([type="checkbox"]):focus{
@@ -114,9 +80,8 @@ input {
     cursor: pointer;	
     background: rgb(61, 157, 179);
     padding: 8px 5px;
-    font-family: 'BebasNeueRegular','Arial Narrow',Arial,sans-serif;
     color: #fff;
-    font-size: 24px;	
+    font-size: 18px;	
     border: 1px solid rgb(28, 108, 122);	
     margin-bottom: 10px;	
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
@@ -160,10 +125,9 @@ p.signin.button{
     position: absolute;
     top: 0px;
     width: 88%;	
-    padding: 18px 6% 60px 6%;
-    margin: 0 0 35px 0;
+    padding: 18px 6% 0px 6%;
+    margin: 0 0 0 0;
     background: rgb(247, 247, 247);
     border: 1px solid rgba(147, 184, 189,0.8);
-    box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
     border-radius: 5px;
 }

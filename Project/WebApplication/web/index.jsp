@@ -1,28 +1,36 @@
-<%-- 
-    Document   : index.jsp
-    Created on : 3-gen-2014, 15.13.35
-    Author     : al333z
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6 lt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7 lt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8 lt8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Share2Me</title>
+        <meta charset="UTF-8" />
+        <title>Registration</title>
+        <link rel="stylesheet" type="text/css" href="style-sheets/style.css" />
     </head>
-    
-    <body>
-    
-        <h1>Share2Me Home</h1>
-        
-        <APPLET codebase="applet/" code="asw1013.ListApplet" 
-                archive="Lib1.jar,Applet1.jar" 
-                width=500 height=500>
-            <param name="sessionId" value="<%= session.getId()%>">
+    <body>				
+        <div id="container" >
+            <div id="wrapper">
+                <%@ include file="/WEB-INF/jspf/login.jspf" %>
+            </div>
+            <div id="wrapper">
+                <%@ include file="/WEB-INF/jspf/registration.jspf" %>
+            </div>  
+        </div>  
+        <div id="container">
+            <APPLET codebase="applet/" code="asw1013.ListApplet" 
+                    archive="Lib1.jar,Applet1.jar" 
+                    width=960 height=500>
+                <param name="sessionId" value="<%= session.getId()%>">
 
-        </APPLET>
-        
+            </APPLET>
+        </div> 
     </body>
 </html>
