@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.TransformerConfigurationException;
 import org.w3c.dom.*;
 
 /**
@@ -13,9 +16,6 @@ import org.w3c.dom.*;
  * @author al333z
  */
 public class ListApplet extends JApplet {
-
-    static final String BASE = "http://localhost:8080/WebApplication/";
-    static int i=0;
     
     JLabel l = new JLabel("Dai cazzo");
     JTextField t = new JTextField(10);
@@ -44,20 +44,26 @@ public class ListApplet extends JApplet {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             try {
-                                    ManageXML mngXML = new ManageXML();
-                                    HTTPClient hc = new HTTPClient();
-                                    hc.setBase(new URL(BASE));
+                                ManageXML mngXML = new ManageXML();
+                                Document data = mngXML.newDocument();
+                                Element root = data.createElement("tweetsrequest");
+                                root.appendChild(data.createTextNode(t.getText())); // TODO put start and stop num of tweets to get (pagination)
+                                data.appendChild(root);
 
-                                    Document data = mngXML.newDocument();
-                                    Element root = data.createElement("op1");                            
-                                    root.appendChild(data.createTextNode(t.getText()));
-                                    data.appendChild(root);
+                                Document answer = hc.execute("tweets", data);
 
-                                    Document answer = hc.execute("sampleservice",data);
+                                JAXBContext jc = JAXBContext.newInstance(TweetList.class);
+                                Unmarshaller u = jc.createUnmarshaller();
+                                TweetList tweetList = (TweetList) u.unmarshal(answer);
+                                
+                                for(Tweet tweet : tweetList.tweets){
+                                    // TODO add a tweet in the swing UI
+                                    l.setText(tweet.message);
+                                }
 
-                                    l.setText(answer.getDocumentElement().getTagName()+(++i));
-                                    t.setText("");
-                            } catch (Exception ex) {System.out.println(ex);
+                                //t.setText("");
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
                             } 
                         }
                     });
@@ -66,7 +72,8 @@ public class ListApplet extends JApplet {
                 }
             });
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
+    
 }
