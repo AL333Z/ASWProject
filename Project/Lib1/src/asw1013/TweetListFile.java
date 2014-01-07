@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
  */
 public class TweetListFile {
     
-    public static final File TWEET_FILE = new File("/Users/mattia/tweets.xml");
+    public static final File TWEET_FILE = new File("tweets.xml");
     
     private JAXBContext context;
     private ManageXML mngXML;

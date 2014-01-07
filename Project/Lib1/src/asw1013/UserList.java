@@ -1,5 +1,6 @@
 package asw1013;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -11,7 +12,8 @@ public class UserList {
     
     public List<User> users;
     
-    public UserList(List<User> users){
-        this.users = users;
+    public UserList(){
+        this.users = new ArrayList<User>();
     }
+
 }

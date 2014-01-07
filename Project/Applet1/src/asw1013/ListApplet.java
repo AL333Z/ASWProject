@@ -17,14 +17,13 @@ import org.w3c.dom.*;
  * @author al333z
  */
 public class ListApplet extends JApplet {
-    
+
     JLabel l = new JLabel("Dai cazzo!!!");
-    JTextField t = new JTextField(10);
     JButton b = new JButton("send req");
 
     HTTPClient hc = new HTTPClient();
     boolean logged = false;
-    
+
     JAXBContext jc = null;
 
     public void init() {
@@ -38,43 +37,63 @@ public class ListApplet extends JApplet {
                     Container cp = getContentPane();
                     cp.setLayout(new GridLayout(3, 2));
 
-                    cp.add(t);
                     cp.add(l);
                     cp.add(b);
-                    
+
                     b.addActionListener(new ActionListener() {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             try {
                                 ManageXML mngXML = new ManageXML();
+                                String str = "listatweet: \r\n";
+                                
+                                // sample request for all tweets
                                 Document data = mngXML.newDocument();
                                 Element rootReq = data.createElement("tweetsrequest");
-                                rootReq.appendChild(data.createTextNode(t.getText())); // TODO put start and stop num of tweets to get (pagination)
+                                rootReq.appendChild(data.createTextNode("")); // TODO put start and stop num of tweets to get (pagination)
                                 data.appendChild(rootReq);
 
-                                String prova = "listatweet: ";
                                 
                                 Document answer = hc.execute("tweets", data);
                                 NodeList tweetsList = answer.getElementsByTagName("tweets");
-                                for(int i=0; i<tweetsList.getLength(); i++){
+                                for (int i = 0; i < tweetsList.getLength(); i++) {
                                     Element tweetElem = (Element) tweetsList.item(i);
                                     // TODO add data from this tweetElem to the swing UI
                                     // example:
-                                    prova = prova + tweetElem.getElementsByTagName("message").item(0).getTextContent() + ", ";
+                                    str = str + tweetElem.getElementsByTagName("message").item(0).getTextContent() + "\r\n";
                                 }
 
-                               
-                                l.setText(prova);
+                                l.setText(str);
                                 
+                                // sample request for all users
+                                Document data2 = mngXML.newDocument();
+                                Element rootReq2 = data2.createElement("usersrequest");
+                                rootReq2.appendChild(data2.createTextNode("")); // TODO put start and stop num of users to get (pagination)
+                                data2.appendChild(rootReq2);
+
+                                str += "\r\nUsers:\r\n";
+                                answer = hc.execute("users", data2);
+                                NodeList userList = answer.getElementsByTagName("users");
+                                System.out.println("l: " + userList.toString());
+                                
+                                
+                                for (int i = 0; i < userList.getLength(); i++) {
+                                    Element userElem = (Element) userList.item(i);
+                                    // TODO add data from this userElem to the swing UI
+                                    // example:
+                                    str = str + userElem.getElementsByTagName("username").item(0).getTextContent() + "\r\n";
+                                }
+
+                                l.setText(str);
+
                                 //t.setText("");
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                                 l.setText(ex.getMessage());
-                            } 
+                            }
                         }
                     });
-                    
 
                 }
             });
@@ -83,5 +102,5 @@ public class ListApplet extends JApplet {
             l.setText(e.getMessage());
         }
     }
-    
+
 }
