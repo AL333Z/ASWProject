@@ -1,7 +1,7 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
 <div id="login" class="form">
-    <form  action="mysuperscript.php" autocomplete="on"> 
+    <form method="POST" action="login.jsp" autocomplete="on"> 
         <p> 
             <label for="username" class="uname" >Email or username</label>
             <input id="username" name="username" required="required" type="text" placeholder="myusername or mymail@mail.com"/>

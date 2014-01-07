@@ -1,7 +1,10 @@
 package asw1013;
 
+import asw1013.util.TweetListFile;
+import asw1013.entity.TweetList;
 import java.io.OutputStream;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBContext;
@@ -17,8 +20,10 @@ import org.w3c.dom.Element;
 public class TweetListService extends AbstractXmlServiceServlet{
 
     @Override
-    protected void operations(Document data, HttpSession session, HttpServletResponse response, ManageXML mngXML) throws Exception {
-        
+    protected void operations(Document data, HttpSession session, 
+            HttpServletRequest request, HttpServletResponse response, 
+            ManageXML mngXML) throws Exception {
+       
         Element recvRoot = data.getDocumentElement();
         // TODO get from XML the start and stop numbers of tweets to sent (pagination)
 
@@ -32,6 +37,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
         Marshaller marsh = jc.createMarshaller();
         Document doc = mngXML.newDocument();
         marsh.marshal(tweetListToSend, doc);
+       
         
         OutputStream os = response.getOutputStream();
         mngXML.transform(os, doc);

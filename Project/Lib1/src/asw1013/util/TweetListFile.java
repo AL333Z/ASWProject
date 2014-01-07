@@ -1,5 +1,8 @@
-package asw1013;
+package asw1013.util;
 
+import asw1013.ManageXML;
+import asw1013.entity.Tweet;
+import asw1013.entity.TweetList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

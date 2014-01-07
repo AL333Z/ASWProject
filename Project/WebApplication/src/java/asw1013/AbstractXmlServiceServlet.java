@@ -30,13 +30,15 @@ public abstract class AbstractXmlServiceServlet extends HttpServlet {
             Document data = mngXML.parse(is);
             is.close();
 
-            operations(data, session, response, mngXML);
+            operations(data, session, request, response, mngXML);
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
     }
     
-    protected abstract void operations(Document data, HttpSession session, HttpServletResponse response, ManageXML mngXML) throws Exception;
+    protected abstract void operations(Document data, HttpSession session, 
+            HttpServletRequest request, HttpServletResponse response, 
+            ManageXML mngXML) throws Exception;
     
 }

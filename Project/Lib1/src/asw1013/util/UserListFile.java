@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1013;
+package asw1013.util;
 
+import asw1013.ManageXML;
+import asw1013.entity.User;
+import asw1013.entity.UserList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -52,6 +54,16 @@ public class UserListFile {
         UserList users = (UserList) u.unmarshal(tweetsDoc);
         return users;
     }
+    
+    public void registerUser(User user) throws Exception {
+        UserList ul = readFile();
+        if (!isUserAlreadyRegistered(user, ul)) {
+            ul.users.add(user);
+            writeFile(ul);
+        } else {
+            throw new Exception("User already registered.");
+        }
+    }
 
     public void writeFile(UserList userList) throws Exception {
         Marshaller marsh = context.createMarshaller();
@@ -62,6 +74,14 @@ public class UserListFile {
         out.close();
     }
 
+    private boolean isUserAlreadyRegistered(User user, UserList ul) {
+        for(User usr : ul.users) {
+            if (usr.username.equals(user.username)) return true;
+        }
+        
+        return false;
+    }
+    
     private void createFile() throws Exception {
         User admin = new User();
         admin.username = "admin";

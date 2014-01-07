@@ -1,4 +1,4 @@
-package asw1013;
+package asw1013.entity;
 
 import java.util.ArrayList;
 import java.util.List;
