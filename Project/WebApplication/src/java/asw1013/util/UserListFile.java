@@ -64,6 +64,16 @@ public class UserListFile {
             throw new Exception("User already registered.");
         }
     }
+    
+    public synchronized void deleteUser(User user) throws Exception {
+        UserList ul = readFile();
+        if (!isUserAlreadyRegistered(user, ul)) {
+            ul.users.remove(user);
+            writeFile(ul);
+        } else {
+            throw new Exception("User already registered.");
+        }
+    }
 
     public synchronized User loginUser(User user) throws Exception {
         UserList ul = readFile();
