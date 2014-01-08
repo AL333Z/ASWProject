@@ -16,6 +16,10 @@ public class ListApplet extends JApplet {
     boolean logged = false;
     
     int lastDownloadedTweet = 0;
+    
+    Object[][] rows = {
+            {"Ciao io sono una riga", "questa è una mia cella"}
+        };
 
     public void init() {
 
@@ -23,12 +27,16 @@ public class ListApplet extends JApplet {
             hc.setSessionId(getParameter("sessionId"));
             hc.setBase(getDocumentBase());
             mngXML = new ManageXML();
+
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    updateUi();
+                }
+            });
             
-            Container cp = getContentPane();
-            cp.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-            
-            
-            new SwingWorker<Void, NodeList>(){
+
+            /*new SwingWorker<Void, NodeList>(){
                 @Override
                 protected Void doInBackground() throws Exception {
                     while(true){
@@ -51,7 +59,7 @@ public class ListApplet extends JApplet {
                     }
                 }
                 
-            }.execute();
+            }.execute();*/
             
         } catch (Exception e) {
 
@@ -95,6 +103,16 @@ public class ListApplet extends JApplet {
         } catch (Exception e) {
 
         }
+    }
+
+    private void updateUi() {
+
+        JList jlist = new JList(rows);
+        ListCellRenderer renderer = new ComplexCellRenderer();
+        jlist.setCellRenderer(renderer);
+        JScrollPane scrollPane = new JScrollPane(jlist);
+        getContentPane().add(scrollPane);
+
     }
 
 }
