@@ -14,12 +14,15 @@ public class ListApplet extends JApplet {
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
     boolean logged = false;
-    
+
     int lastDownloadedTweet = 0;
-    
+
+    // TODO replace with actual data
     Object[][] rows = {
-            {"Ciao io sono una riga", "questa è una mia cella"}
-        };
+        {"al333z", "funziona davvero", "1 ora fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash1/186727_1574644517_1361820427_q.jpg"},
+        {"mattibal", "pensa te quante bestemmie ci fa dire sta merda..", "2 ore fa","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg"},
+        {"satana", "cloro al clero.", "2 giorni fa",""}
+    };
 
     public void init() {
 
@@ -34,41 +37,39 @@ public class ListApplet extends JApplet {
                     updateUi();
                 }
             });
-            
+
 
             /*new SwingWorker<Void, NodeList>(){
-                @Override
-                protected Void doInBackground() throws Exception {
-                    while(true){
-                        NodeList tweets = getTweets();
-                        publish(tweets);
-                        waitForUpdate();
-                    }
-                }
+             @Override
+             protected Void doInBackground() throws Exception {
+             while(true){
+             NodeList tweets = getTweets();
+             publish(tweets);
+             waitForUpdate();
+             }
+             }
 
-                @Override
-                protected void process(java.util.List<NodeList> chunks) {
-                    NodeList tweetsList = chunks.get(0);
+             @Override
+             protected void process(java.util.List<NodeList> chunks) {
+             NodeList tweetsList = chunks.get(0);
 
-                    // TODO Add tweets to the UI
-                    for (int i = 0; i < tweetsList.getLength(); i++) {
-                        Element tweetElem = (Element) tweetsList.item(i);
-                                    // TODO add data from this tweetElem to the swing UI
-                        // example:
-                        tweetElem.getElementsByTagName("message").item(0).getTextContent();
-                    }
-                }
+             // TODO Add tweets to the UI
+             for (int i = 0; i < tweetsList.getLength(); i++) {
+             Element tweetElem = (Element) tweetsList.item(i);
+             // TODO add data from this tweetElem to the swing UI
+             // example:
+             tweetElem.getElementsByTagName("message").item(0).getTextContent();
+             }
+             }
                 
-            }.execute();*/
-            
+             }.execute();*/
         } catch (Exception e) {
 
         }
     }
-    
-    
+
     private NodeList getTweets() throws Exception {
-        
+
         // prepare the request xml
         Document data = mngXML.newDocument();
         Element rootReq = data.createElement("tweetsrequest");
@@ -76,7 +77,7 @@ public class ListApplet extends JApplet {
         op.appendChild(data.createTextNode("getText"));
         rootReq.appendChild(op);
         Element startTweetElem = data.createElement("startTweet");
-        startTweetElem.appendChild(data.createTextNode(lastDownloadedTweet+""));
+        startTweetElem.appendChild(data.createTextNode(lastDownloadedTweet + ""));
         rootReq.appendChild(startTweetElem);
         data.appendChild(rootReq);
 
@@ -85,8 +86,7 @@ public class ListApplet extends JApplet {
         NodeList tweetsList = answer.getElementsByTagName("tweets");
         return tweetsList;
     }
-    
-    
+
     private void waitForUpdate() {
         try {
 
@@ -97,7 +97,7 @@ public class ListApplet extends JApplet {
             op.appendChild(data.createTextNode("waitForUpdate"));
             rootReq.appendChild(op);
             data.appendChild(rootReq);
-            
+
             Document answer = hc.execute("tweets", data);
 
         } catch (Exception e) {
@@ -107,12 +107,14 @@ public class ListApplet extends JApplet {
 
     private void updateUi() {
 
+        Container cp = getContentPane();
+        cp.setLayout(new GridLayout(1, 1));
+
         JList jlist = new JList(rows);
-        ListCellRenderer renderer = new ComplexCellRenderer();
+        EntryListCellRenderer renderer = new EntryListCellRenderer();
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
-        getContentPane().add(scrollPane);
-
+        cp.add(scrollPane);
     }
 
 }
