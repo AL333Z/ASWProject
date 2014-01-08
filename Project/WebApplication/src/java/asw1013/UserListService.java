@@ -31,33 +31,6 @@ public class UserListService extends AbstractXmlServiceServlet {
         Document answer = null;
 
         switch (operation) {
-            case "registration": {
-                UserListFile userFile = new UserListFile();
-                
-                log("root: "+root.toString());
-                
-                NodeList ul = root.getElementsByTagName("users");
-                Element userElem = (Element) ul.item(0);
-
-                User usr = new User();
-                usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
-                usr.pass = userElem.getElementsByTagName("pass").item(0).getTextContent();
-                usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
-
-                try {
-                    userFile.registerUser(usr);
-
-                    UserList userList = new UserList();
-                    userList.users.add(usr);
-
-                    sendUserList(userList, response.getOutputStream(), mngXML);
-
-                } catch (Exception e) {
-                    sendUserList(new UserList(), response.getOutputStream(), mngXML);
-                }
-
-                break;
-            }
 
             case "userlist": {
                 Element recvRoot = data.getDocumentElement();
