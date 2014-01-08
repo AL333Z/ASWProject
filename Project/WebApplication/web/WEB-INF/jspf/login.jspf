@@ -3,17 +3,21 @@
 <div id="login" class="form">
     <form method="POST" action="login.jsp" autocomplete="on"> 
         <p> 
-            <label for="username" class="uname" >Email or username</label>
-            <input id="username" name="username" required="required" type="text" placeholder="myusername or mymail@mail.com"/>
+            <label for="username" class="uname" >Username</label>
+            <input id="username" name="username" required="required" type="text" placeholder="myusername"/>
         </p>
         <p> 
             <label for="password" class="youpasswd">Password</label>
-            <input id="password" name="password" required="required" type="password" placeholder="" /> 
+            <input id="password" name="password" required="required" type="password" placeholder="password" /> 
         </p>
+        
+        <!--
         <p class="keeplogin"> 
             <input type="checkbox" name="loginkeeping" id="loginkeeping" value="loginkeeping" /> 
             <label for="loginkeeping">Keep me logged in</label>
         </p>
+        -->
+        
         <p class="login button"> 
             <input type="submit" value="Login" /> 
         </p>

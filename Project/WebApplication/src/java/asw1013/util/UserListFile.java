@@ -65,6 +65,19 @@ public class UserListFile {
         }
     }
 
+    public User loginUser(User user) throws Exception {
+        UserList ul = readFile();
+        for(User usr : ul.users) {
+            if (usr.username.equals(user.username)) {
+                if (usr.pass.equals(user.pass)) {
+                    return usr;
+                }
+                throw new Exception("Wrong password.");
+            }
+        }
+        throw new Exception("User does not exist.");
+    }
+    
     public void writeFile(UserList userList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();

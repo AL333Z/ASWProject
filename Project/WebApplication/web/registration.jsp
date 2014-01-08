@@ -1,7 +1,5 @@
 <%@page import="asw1013.entity.User"%>
-<%@ page import="java.util.*" %>
 <%@ page import="asw1013.util.UserListFile" %>
-
 
 <%
     User user = new User();
