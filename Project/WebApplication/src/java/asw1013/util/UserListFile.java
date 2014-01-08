@@ -44,7 +44,7 @@ public class UserListFile {
         mngXML = new ManageXML();
     }
 
-    public UserList readFile() throws Exception {
+    public synchronized UserList readFile() throws Exception {
         if (!USER_FILE.exists()) {
             createFile();
         }
@@ -55,7 +55,7 @@ public class UserListFile {
         return users;
     }
     
-    public void registerUser(User user) throws Exception {
+    public synchronized void registerUser(User user) throws Exception {
         UserList ul = readFile();
         if (!isUserAlreadyRegistered(user, ul)) {
             ul.users.add(user);
@@ -65,7 +65,7 @@ public class UserListFile {
         }
     }
 
-    public User loginUser(User user) throws Exception {
+    public synchronized User loginUser(User user) throws Exception {
         UserList ul = readFile();
         for(User usr : ul.users) {
             if (usr.username.equals(user.username)) {
@@ -78,7 +78,7 @@ public class UserListFile {
         throw new Exception("User does not exist.");
     }
     
-    public void writeFile(UserList userList) throws Exception {
+    public synchronized void writeFile(UserList userList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
         marsh.marshal(userList, doc);
