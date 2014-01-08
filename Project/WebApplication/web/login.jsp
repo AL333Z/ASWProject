@@ -1,18 +1,22 @@
-<%-- 
-    Document   : login
-    Created on : 7-gen-2014, 14.50.23
-    Author     : al333z
---%>
-<%@ page import="java.util.*" %>
-<%
-    Enumeration flds = request.getParameterNames();
-    String str = "";
-    while (flds.hasMoreElements()) {
-        String field = (String) flds.nextElement();
-        String value = request.getParameter(field);
+<%@page import="asw1013.entity.User"%>
+<%@ page import="asw1013.util.UserListFile" %>
 
+<%
+    User user = new User();
+    user.pass = request.getParameter("password");
+    user.username = request.getParameter("username");
+
+    UserListFile ulf = new UserListFile();
+    user = ulf.loginUser(user);
+    
+    // setting user as logged in
+    session.setAttribute("isLoggedIn", true);
+    session.setAttribute("username", user.username);
+    session.setAttribute("email", user.email);
+
+    // redirecting to main page
+    String site = new String("index.jsp");
+    response.setStatus(response.SC_OK);
+    response.sendRedirect(site);
+    
 %>
-<li><%= field%> = <%= value%></li>
-    <%
-        }
-    %>

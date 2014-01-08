@@ -1,17 +1,7 @@
 <%@page import="asw1013.entity.User"%>
-<%@page import="javax.xml.bind.Marshaller"%>
-<%@page import="asw1013.entity.UserList"%>
-<%@page import="javax.xml.bind.JAXBContext"%>
-<%@page import="java.net.URL"%>
-<%@page import="asw1013.HTTPClient"%>
-<%@page import="org.w3c.dom.Element"%>
-<%@page import="asw1013.ManageXML"%>
-<%@page import="org.w3c.dom.Document"%>
-<%@ page import="java.util.*" %>
 <%@ page import="asw1013.util.UserListFile" %>
 
-
-<%    
+<%
     User user = new User();
     user.email = request.getParameter("emailsignup");
     user.pass = request.getParameter("passwordsignup");
@@ -19,4 +9,15 @@
 
     UserListFile ulf = new UserListFile();
     ulf.registerUser(user);
+
+    // setting user as logged in
+    session.setAttribute("isLoggedIn", true);
+    session.setAttribute("username", user.username);
+    session.setAttribute("email", user.email);
+
+    // redirecting to main page
+    String site = new String("index.jsp");
+    response.setStatus(response.SC_OK);
+    response.sendRedirect(site);
+    
 %>

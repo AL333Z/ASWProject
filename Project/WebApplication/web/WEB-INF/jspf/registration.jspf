@@ -4,19 +4,15 @@
     <form method="POST" action="registration.jsp" autocomplete="on"> 
         <p> 
             <label for="usernamesignup" class="uname" data-icon="u">Username</label>
-            <input id="usernamesignup" name="usernamesignup" required="required" type="text" placeholder="myusername690" />
+            <input id="usernamesignup" name="usernamesignup" required="required" type="text" placeholder="username" />
         </p>
         <p> 
             <label for="emailsignup" class="youmail" data-icon="e" >Email</label>
-            <input id="emailsignup" name="emailsignup" required="required" type="email" placeholder="myemail@mail.com"/> 
+            <input id="emailsignup" name="emailsignup" required="required" type="email" placeholder="email@mail.com"/> 
         </p>
         <p> 
             <label for="passwordsignup" class="youpasswd" data-icon="p">Password</label>
-            <input id="passwordsignup" name="passwordsignup" required="required" type="password" placeholder=""/>
-        </p>
-        <p> 
-            <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Confirm password</label>
-            <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder=""/>
+            <input id="passwordsignup" name="passwordsignup" required="required" type="password" placeholder="password"/>
         </p>
         <p class="signin button"> 
             <input type="submit" value="Sign up"/> 

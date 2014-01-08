@@ -15,16 +15,41 @@ and open the template in the editor.
         <title>Registration</title>
         <link rel="stylesheet" type="text/css" href="style-sheets/style.css" />
     </head>
-    <body>				
-        <div id="container" >
-            <div id="wrapper">
+    <body>	
+        <div class="navigation">
+            <ul>
+                <li><a href="index.jsp">Share2Me</a></li>
+                <li><a href="#">Search</a></li>
+
+                <%
+                    if (session.getAttribute("isLoggedIn") != null
+                            && (Boolean) session.getAttribute("isLoggedIn")) {
+                %>
+                <%@ include file="/WEB-INF/jspf/logged.jspf" %>
+                <%
+                    }
+                %> 
+            </ul>
+        </div>
+
+        <%
+            if (!(session.getAttribute("isLoggedIn") != null
+                    && (Boolean) session.getAttribute("isLoggedIn"))) {
+        %>
+        %>    
+        <div class="container" >
+            <div class="wrapper">
                 <%@ include file="/WEB-INF/jspf/login.jspf" %>
             </div>
-            <div id="wrapper">
+            <div class="wrapper">
                 <%@ include file="/WEB-INF/jspf/registration.jspf" %>
             </div>  
         </div>  
-        <div id="container">
+        <%
+            }
+        %> 
+
+        <div class="container">
             <APPLET codebase="applet/" code="asw1013.ListApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
