@@ -16,17 +16,26 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="style-sheets/style.css" />
     </head>
     <body>	
-        <%
-            if (session.getAttribute("isLoggedIn") != null
-                    && (Boolean) session.getAttribute("isLoggedIn")) {
-        %>
-        <div id="container" >
-            <div class="wrapper wrappersmall">
+        <div class="navigation">
+            <ul>
+                <li><a href="index.jsp">Share2Me</a></li>
+                <li><a href="#">Search</a></li>
+
+                <%
+                    if (session.getAttribute("isLoggedIn") != null
+                            && (Boolean) session.getAttribute("isLoggedIn")) {
+                %>
                 <%@ include file="/WEB-INF/jspf/logged.jspf" %>
-            </div>
-        </div> 
+                <%
+                    }
+                %> 
+            </ul>
+        </div>
+
         <%
-        } else {
+            if (!(session.getAttribute("isLoggedIn") != null
+                    && (Boolean) session.getAttribute("isLoggedIn"))) {
+        %>
         %>    
         <div class="container" >
             <div class="wrapper">

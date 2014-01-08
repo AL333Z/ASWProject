@@ -54,30 +54,46 @@ public class UserListFile {
         UserList users = (UserList) u.unmarshal(tweetsDoc);
         return users;
     }
-    
+
     public synchronized void registerUser(User user) throws Exception {
         UserList ul = readFile();
-        if (!isUserAlreadyRegistered(user, ul)) {
+        if (!isUserRegistered(user, ul)) {
             ul.users.add(user);
             writeFile(ul);
         } else {
             throw new Exception("User already registered.");
         }
     }
-    
+
     public synchronized void deleteUser(User user) throws Exception {
         UserList ul = readFile();
-        if (!isUserAlreadyRegistered(user, ul)) {
-            ul.users.remove(user);
-            writeFile(ul);
+        if (!isUserRegistered(user, ul)) {
+            throw new Exception("User does not exist.");
         } else {
-            throw new Exception("User already registered.");
+            for (User usr : ul.users) {
+                if (usr.username.equals(user.username)) {
+                    ul.users.remove(usr);
+                    writeFile(ul);
+                    break;
+                }
+            }
         }
+    }
+
+    public synchronized UserList searchUsers(String str) throws Exception {
+        UserList ul = readFile();
+        UserList returnList = new UserList();
+        for (User usr : ul.users) {
+            if (usr.username.contains(str) || usr.email.contains(str)) {
+                returnList.users.add(usr);
+            }
+        }
+        return returnList;
     }
 
     public synchronized User loginUser(User user) throws Exception {
         UserList ul = readFile();
-        for(User usr : ul.users) {
+        for (User usr : ul.users) {
             if (usr.username.equals(user.username)) {
                 if (usr.pass.equals(user.pass)) {
                     return usr;
@@ -87,7 +103,7 @@ public class UserListFile {
         }
         throw new Exception("User does not exist.");
     }
-    
+
     public synchronized void writeFile(UserList userList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
@@ -97,14 +113,16 @@ public class UserListFile {
         out.close();
     }
 
-    private boolean isUserAlreadyRegistered(User user, UserList ul) {
-        for(User usr : ul.users) {
-            if (usr.username.equals(user.username)) return true;
+    private boolean isUserRegistered(User user, UserList ul) {
+        for (User usr : ul.users) {
+            if (usr.username.equals(user.username)) {
+                return true;
+            }
         }
-        
+
         return false;
     }
-    
+
     private void createFile() throws Exception {
         User admin = new User();
         admin.username = "admin";

@@ -18,13 +18,42 @@ limitations under the License.
     Author     : al333z
 */
 
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navigation{
+    height: 40px;
+    width: 100%;
+    top: 0;
+    margin: 0;
+    position: fixed;
+    background-color: rgb(95, 155, 198);
+    z-index: 1000;
+}
+
+.navigation ul {
+    list-style: none;
+}
+
+.navigation ul li {
+    display: inline-block;
+    float: left;
+    margin: 0 14px;
+
+}
+
+.navigation ul li a{
+    color: white;
+    font-size: medium;
+    text-decoration: none;
+}
+
 /* remove codrops styles and reset the whole thing */
 .container{
     text-align: left;
-    margin: 0;
     padding: 0;
-    margin: 0 auto;
-    font-family: Arial, Helvetica, sans-serif;
+    margin: 40px auto;
     width: 960px;
     clear: both;
 }
@@ -125,8 +154,7 @@ p.signin.button{
 
 /** Styling forms **/
 #register, 
-#login,
-#logged
+#login
 {
     position: absolute;
     top: 0px;
