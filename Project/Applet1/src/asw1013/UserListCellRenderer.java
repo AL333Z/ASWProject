@@ -34,13 +34,15 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
-    private boolean isLoggedUserAdmin = false;
-
-    UserListCellRenderer() {
+    private JButton deleteButton = null;
+    
+    UserListCellRenderer(boolean isLoggedUserAdmin) {
+        
         userLabel = new JLabel(" ");
         messageLabel = new JLabel(" ");
         timeLabel = new JLabel(" ");
         imageLabel = new JLabel();
+        deleteButton = new JButton("Delete");
         imageLabel.setOpaque(true);
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -63,12 +65,9 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
                 addGroup(layout.createParallelGroup().
                         addComponent(userLabel, 10, 10, Integer.MAX_VALUE).
                         addComponent(messageLabel, 10, 10, Integer.MAX_VALUE).
-                        addComponent(timeLabel, 10, 10, Integer.MAX_VALUE));
-
-        if (isLoggedUserAdmin) {
-            JButton deleteButton = new JButton("Delete");
-            hg.addComponent(deleteButton, 10, 10, Integer.MAX_VALUE);
-        }
+                        addComponent(timeLabel, 10, 10, Integer.MAX_VALUE).
+                        addComponent(deleteButton, 10, 10, Integer.MAX_VALUE)
+                );
 
         GroupLayout.ParallelGroup vg = layout.createParallelGroup();
         layout.setVerticalGroup(vg);
@@ -77,11 +76,11 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
                 addGroup(layout.createSequentialGroup().
                         addComponent(userLabel).
                         addComponent(messageLabel).
-                        addComponent(timeLabel));
-
-        if (isLoggedUserAdmin) {
-            JButton deleteButton = new JButton("Delete");
-            vg.addComponent(deleteButton, 10, 10, Integer.MAX_VALUE);
+                        addComponent(timeLabel).
+                        addComponent(deleteButton));
+                       
+        if (!isLoggedUserAdmin) {
+            deleteButton.setVisible(false);
         }
 
         layout.linkSize(SwingConstants.VERTICAL, imageLabel);
@@ -102,8 +101,6 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
             User usr = (User) value;
             user = usr.username;
             message = usr.email;
-//            time = (String) values[2];
-//            img = (String) values[3];
         }
 
         if (user == null) {
@@ -135,10 +132,6 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         }
 
         return this;
-    }
-
-    public void setLoggedUserAdmin(boolean isAdmin) {
-        this.isLoggedUserAdmin = isAdmin;
     }
 
     private void adjustColors(Color bg, Color fg, JComponent... components) {

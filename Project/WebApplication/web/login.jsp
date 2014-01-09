@@ -13,6 +13,7 @@
     session.setAttribute("isLoggedIn", true);
     session.setAttribute("username", user.username);
     session.setAttribute("email", user.email);
+    session.setAttribute("isAdmin", user.isAdmin);
 
     // redirecting to main page
     String site = new String("index.jsp");

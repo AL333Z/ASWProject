@@ -17,7 +17,9 @@ public class UserSearchApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
-
+    DefaultListModel model = new DefaultListModel<>();
+    final JList jlist = new JList(model);
+    
     public void init() {
 
         try {
@@ -41,7 +43,7 @@ public class UserSearchApplet extends JApplet {
 
         // setting the layout
         Container cp = getContentPane();
-        cp.setLayout(new GridBagLayout());
+        cp.setLayout(null);
 
         // textfield and button, to perform search
         final JTextField field = new JTextField();
@@ -49,76 +51,94 @@ public class UserSearchApplet extends JApplet {
         JButton btn = new JButton("Post message");
         btn.setPreferredSize(new Dimension(200, 40));
 
+        boolean isAdmin = false;
+        if (getParameter("isAdmin") != null && getParameter("isAdmin").equals("Y")) {
+            isAdmin = true;
+        }
+
         // list to show results
-        final JList jlist = new JList();
-        UserListCellRenderer renderer = new UserListCellRenderer();
+        UserListCellRenderer renderer = new UserListCellRenderer(isAdmin);
+
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
 
         // add listener to button
         btn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ManageXML mngXML = new ManageXML();
-                    Document data = mngXML.newDocument();
-
-                    // node containing search term
-                    Element searchTerm = data.createElement("searchTerm");
-                    searchTerm.appendChild(data.createTextNode(field.getText()));
-
-                    // root node
-                    Element rootReq = data.createElement("userlist");
-
-                    // build the xml
-                    rootReq.appendChild(searchTerm);
-                    data.appendChild(rootReq);
-
-                    final LinkedList<User> res = new LinkedList<User>();
-
-                    Document answer = hc.execute("users", data);
-                    NodeList userList = answer.getElementsByTagName("users");
-                    for (int i = 0; i < userList.getLength(); i++) {
-                        Element userElem = (Element) userList.item(i);
-
-                        //TODO perform unmarshaling in a more elegant way
-                        User usr = new User();
-                        usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
-                        usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
-
-                        res.add(usr);
-                    }
-
-                    // update the list
-                    jlist.setListData(res.toArray());
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-
-                }
+                UserDownloadWorker dw = new UserDownloadWorker(field.getText());
+                dw.execute();
             }
         });
 
         // add components
-        GridBagConstraints c = new GridBagConstraints();
+        field.setBounds(20, 20, 500, 40);
+        cp.add(field);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.weightx = 0.5;
-        c.gridx = 0;
-        c.gridy = 0;
-        cp.add(field, c);
+        btn.setBounds(540, 20, 100, 40);
+        cp.add(btn);
 
-        c.gridx = 1;
-        cp.add(btn, c);
+        scrollPane.setBounds(20, 80, 800, 400);
+        cp.add(scrollPane);
 
-        c.gridx = 0;
-        c.gridy = 1;
-        c.weightx = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.PAGE_END;
-        cp.add(scrollPane, c);
+    }
+
+    private NodeList getUsers(String st) throws Exception {
+
+        mngXML = new ManageXML();
+        Document data = mngXML.newDocument();
+
+        // node containing search term
+        Element searchTerm = data.createElement("searchTerm");
+        searchTerm.appendChild(data.createTextNode(st));
+
+        // root node
+        Element rootReq = data.createElement("userlist");
+
+        // build the xml
+        rootReq.appendChild(searchTerm);
+        data.appendChild(rootReq);
+
+        final LinkedList<User> res = new LinkedList<>();
+
+        Document answer = hc.execute("users", data);
+        NodeList userList = answer.getElementsByTagName("users");
+        return userList;
+    }
+
+    private class UserDownloadWorker extends SwingWorker<Void, NodeList> {
+
+        private String st;
+
+        UserDownloadWorker(String st) {
+            this.st = st;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            NodeList users = getUsers(st);
+            publish(users);
+            return null;
+        }
+
+        @Override
+        protected void process(java.util.List<NodeList> chunks) {
+            // clean the list
+            model.removeAllElements();
+            
+            NodeList usersList = chunks.get(0);
+            for (int i = 0; i < usersList.getLength(); i++) {
+                Element userElem = (Element) usersList.item(i);
+
+                //TODO perform unmarshaling in a more elegant way
+                User usr = new User();
+                usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
+                usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
+
+                // update the list
+                model.addElement(usr);
+            }
+        }
     }
 
 }
