@@ -33,7 +33,7 @@ public abstract class AbstractXmlServiceServlet extends HttpServlet {
             operations(data, session, request, response, mngXML);
 
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
     

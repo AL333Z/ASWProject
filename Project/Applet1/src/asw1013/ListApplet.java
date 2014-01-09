@@ -2,10 +2,16 @@ package asw1013;
 
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.io.StringWriter;
 import javax.swing.JApplet;
 import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 
 /**
@@ -23,7 +29,7 @@ public class ListApplet extends JApplet {
     Object[][] testdata
             = {
                 {"al333z", "funziona davvero", "1 ora fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash1/186727_1574644517_1361820427_q.jpg"},
-                {"mattibal", "pensa te quante bestemmie ci fa dire sta merda..", "2 ore fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg"},
+                {"mattibal", "ohibo, devo aggiornare la lista dei tweet!!", "2 ore fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg"},
                 {"satana", "cloro al clero.", "2 giorni fa", ""}
             };
     
@@ -50,9 +56,11 @@ public class ListApplet extends JApplet {
                     jlist.setCellRenderer(new EntryListCellRenderer());
                     JScrollPane scrollPane = new JScrollPane(jlist);
                     cp.add(scrollPane);
-                    model.addElement(testdata[1]);
                 }
             });
+            
+            new TweetDownloadWorker().execute();
+            new CometUpdaterThread().start();
 
         } catch (Exception e) {
 
@@ -66,37 +74,48 @@ public class ListApplet extends JApplet {
         Document data = mngXML.newDocument();
         Element rootReq = data.createElement("tweetsrequest");
         Element op = data.createElement("operation");
-        op.appendChild(data.createTextNode("getText"));
+        op.appendChild(data.createTextNode("getTweets"));
         rootReq.appendChild(op);
         Element startTweetElem = data.createElement("startTweet");
         startTweetElem.appendChild(data.createTextNode(lastDownloadedTweet + ""));
         rootReq.appendChild(startTweetElem);
         data.appendChild(rootReq);
+        
+        showDocument(data);
 
         Document answer = hc.execute("tweets", data);
+        
+        showDocument(answer);
 
         NodeList tweetsList = answer.getElementsByTagName("tweets");
         return tweetsList;
     }
 
-    private void waitForUpdate() {
-        try {
-
-            // prepare the request xml
-            Document data = mngXML.newDocument();
-            Element rootReq = data.createElement("tweetsrequest");
-            Element op = data.createElement("operation");
-            op.appendChild(data.createTextNode("waitForUpdate"));
-            rootReq.appendChild(op);
-            data.appendChild(rootReq);
-
-            Document answer = hc.execute("tweets", data);
-
-        } catch (Exception e) {
-
+    
+    private class CometUpdaterThread extends Thread {
+        @Override
+        public void run() {
+            while(true){
+                try {
+                    // prepare the request xml
+                    Document data = mngXML.newDocument();
+                    Element rootReq = data.createElement("tweetsrequest");
+                    Element op = data.createElement("operation");
+                    op.appendChild(data.createTextNode("waitForUpdate"));
+                    rootReq.appendChild(op);
+                    data.appendChild(rootReq);
+                    
+                    Document answer = hc.execute("tweets", data);
+                    
+                } catch (Exception e) {
+                }
+                // I need to trigger a tweet refresh
+                new TweetDownloadWorker().execute();
+                model.addElement(testdata[1]); // stupid debugging thing :)
+            }
         }
     }
-
+    
 
     private class TweetDownloadWorker extends SwingWorker<Void, NodeList> {
         
@@ -112,13 +131,41 @@ public class ListApplet extends JApplet {
 
             NodeList tweetsList = chunks.get(0);
 
-            // TODO Add tweets to the UI
             for (int i = 0; i < tweetsList.getLength(); i++) {
                 Element tweetElem = (Element) tweetsList.item(i);
-                // TODO add data from this tweetElem to the swing UI
-                // example:
-                tweetElem.getElementsByTagName("message").item(0).getTextContent();
+                
+                Object[] listElem = {
+                    tweetElem.getElementsByTagName("username").item(0).getTextContent(),
+                    tweetElem.getElementsByTagName("message").item(0).getTextContent(),
+                    "1 minuto fa",
+                    ""
+                };
+                
+                model.addElement(listElem);
             }
         }
+    }
+    
+    
+    private void showDocument(Document doc) {
+        try {
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+            final String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    Object[] boh = {"xmldebug",
+                            output,
+                            "adesso",
+                            ""
+                            };
+                    model.addElement(boh);
+                }
+            });
+        } catch (Exception e) {}
     }
 }
