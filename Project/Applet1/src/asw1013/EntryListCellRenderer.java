@@ -108,7 +108,8 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
         timeLabel.setText(time);
         
         try {
-            imageLabel.setIcon(getImageIcon(new URL(img)));
+            URL url = new URL(img);
+            new ImageLoader(imageLabel, url).execute();
         } catch (MalformedURLException ex) {
             imageLabel.setIcon(null);
         }
@@ -129,11 +130,5 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
             c.setForeground(fg);
             c.setBackground(bg);
         }
-    }
-
-    private ImageIcon getImageIcon(URL url) {
-        //TODO fare il download su un altro thread magari
-        return new ImageIcon(url);
-        
     }
 }
