@@ -46,7 +46,7 @@ public class UserSearchApplet extends JApplet {
         // textfield and button, to perform search
         final JTextField field = new JTextField();
 
-        JButton btn = new JButton("Search");
+        JButton btn = new JButton("Post message");
         btn.setPreferredSize(new Dimension(200, 40));
 
         // list to show results
