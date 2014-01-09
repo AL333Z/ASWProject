@@ -58,6 +58,7 @@ public class UserListFile {
     public synchronized void registerUser(User user) throws Exception {
         UserList ul = readFile();
         if (!isUserRegistered(user, ul)) {
+            user.isAdmin = false;
             ul.users.add(user);
             writeFile(ul);
         } else {
@@ -127,6 +128,8 @@ public class UserListFile {
         User admin = new User();
         admin.username = "admin";
         admin.pass = "password";
+        admin.email = "admin@share2me.com";
+        admin.isAdmin = false;
 
         UserList ul = new UserList();
         ul.users.add(admin);
