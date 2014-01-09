@@ -21,7 +21,6 @@ and open the template in the editor.
             if (!(session.getAttribute("isLoggedIn") != null
                     && (Boolean) session.getAttribute("isLoggedIn"))) {
         %>
-        %>    
         <div class="container" >
             <div class="wrapper">
                 <%@ include file="/WEB-INF/jspf/login.jspf" %>
@@ -29,11 +28,21 @@ and open the template in the editor.
             <div class="wrapper">
                 <%@ include file="/WEB-INF/jspf/registration.jspf" %>
             </div>  
-        </div>  
+        </div>
+        <%
+            } else {
+        %> 
+        <div class="container">
+            <applet codebase="applet/" code="asw1013.PostTweetApplet"
+                    archive="Lib1.jar,Applet1.jar"
+                    width=960 height=500>
+                <param name="sessionId" value="<%= session.getId()%>">
+            </applet>
+        </div>
         <%
             }
-        %> 
-
+        %>
+        
         <div class="container">
             <APPLET codebase="applet/" code="asw1013.ListApplet" 
                     archive="Lib1.jar,Applet1.jar" 

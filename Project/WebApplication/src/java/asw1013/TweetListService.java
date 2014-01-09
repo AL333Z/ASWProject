@@ -76,7 +76,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
 
             AsyncContext asyncContext = request.startAsync();
 
-            asyncContext.setTimeout(2 * 1000);
+            asyncContext.setTimeout(10 * 1000);
             asyncContext.addListener(new AsyncListener() {
                 @Override
                 public void onTimeout(AsyncEvent e) throws IOException {
