@@ -17,6 +17,7 @@ public class UserSearchApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
+    final JList jlist = new JList();
 
     public void init() {
 
@@ -50,53 +51,16 @@ public class UserSearchApplet extends JApplet {
         btn.setPreferredSize(new Dimension(200, 40));
 
         // list to show results
-        final JList jlist = new JList();
         UserListCellRenderer renderer = new UserListCellRenderer();
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
 
         // add listener to button
         btn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ManageXML mngXML = new ManageXML();
-                    Document data = mngXML.newDocument();
-
-                    // node containing search term
-                    Element searchTerm = data.createElement("searchTerm");
-                    searchTerm.appendChild(data.createTextNode(field.getText()));
-
-                    // root node
-                    Element rootReq = data.createElement("userlist");
-
-                    // build the xml
-                    rootReq.appendChild(searchTerm);
-                    data.appendChild(rootReq);
-
-                    final LinkedList<User> res = new LinkedList<User>();
-
-                    Document answer = hc.execute("users", data);
-                    NodeList userList = answer.getElementsByTagName("users");
-                    for (int i = 0; i < userList.getLength(); i++) {
-                        Element userElem = (Element) userList.item(i);
-
-                        //TODO perform unmarshaling in a more elegant way
-                        User usr = new User();
-                        usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
-                        usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
-
-                        res.add(usr);
-                    }
-
-                    // update the list
-                    jlist.setListData(res.toArray());
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-
-                }
+                UserDownloadWorker dw = new UserDownloadWorker(field.getText());
+                dw.execute();
             }
         });
 
@@ -119,6 +83,67 @@ public class UserSearchApplet extends JApplet {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.PAGE_END;
         cp.add(scrollPane, c);
+    }
+
+    private NodeList getUsers(String st) throws Exception {
+
+        mngXML = new ManageXML();
+        Document data = mngXML.newDocument();
+
+        // node containing search term
+        Element searchTerm = data.createElement("searchTerm");
+        searchTerm.appendChild(data.createTextNode(st));
+
+        // root node
+        Element rootReq = data.createElement("userlist");
+
+        // build the xml
+        rootReq.appendChild(searchTerm);
+        data.appendChild(rootReq);
+
+        final LinkedList<User> res = new LinkedList<>();
+
+        Document answer = hc.execute("users", data);
+        NodeList userList = answer.getElementsByTagName("users");
+        return userList;
+    }
+
+    private class UserDownloadWorker extends SwingWorker<Void, NodeList> {
+
+        private String st;
+
+        UserDownloadWorker(String st) {
+            this.st = st;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            NodeList users = getUsers(st);
+            publish(users);
+            return null;
+        }
+
+        @Override
+        protected void process(java.util.List<NodeList> chunks) {
+
+            NodeList usersList = chunks.get(0);
+
+            final LinkedList<User> res = new LinkedList<>();
+
+            for (int i = 0; i < usersList.getLength(); i++) {
+                Element userElem = (Element) usersList.item(i);
+
+                //TODO perform unmarshaling in a more elegant way
+                User usr = new User();
+                usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
+                usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
+
+                res.add(usr);
+            }
+
+            // update the list
+            jlist.setListData(res.toArray());
+        }
     }
 
 }
