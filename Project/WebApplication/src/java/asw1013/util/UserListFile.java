@@ -66,19 +66,17 @@ public class UserListFile {
         }
     }
 
-    public synchronized void deleteUser(User user) throws Exception {
+    public synchronized void deleteUser(String username) throws Exception {
         UserList ul = readFile();
-        if (!isUserRegistered(user, ul)) {
-            throw new Exception("User does not exist.");
-        } else {
-            for (User usr : ul.users) {
-                if (usr.username.equals(user.username)) {
-                    ul.users.remove(usr);
-                    writeFile(ul);
-                    break;
-                }
+
+        for (User usr : ul.users) {
+            if (username.equals(usr.username)) {
+                ul.users.remove(usr);
+                writeFile(ul);
+                return;
             }
         }
+        throw new Exception("User does not exist.");
     }
 
     public synchronized UserList searchUsers(String str) throws Exception {
@@ -129,7 +127,7 @@ public class UserListFile {
         admin.username = "admin";
         admin.pass = "password";
         admin.email = "admin@share2me.com";
-        admin.isAdmin = false;
+        admin.isAdmin = true;
 
         UserList ul = new UserList();
         ul.users.add(admin);

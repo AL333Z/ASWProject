@@ -6,6 +6,8 @@ package asw1013;
 
 import asw1013.entity.User;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.GroupLayout;
@@ -34,15 +36,14 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
-    private JButton deleteButton = null;
-    
-    UserListCellRenderer(boolean isLoggedUserAdmin) {
-        
+
+    UserListCellRenderer() {
+
         userLabel = new JLabel(" ");
         messageLabel = new JLabel(" ");
         timeLabel = new JLabel(" ");
         imageLabel = new JLabel();
-        deleteButton = new JButton("Delete");
+
         imageLabel.setOpaque(true);
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -65,8 +66,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
                 addGroup(layout.createParallelGroup().
                         addComponent(userLabel, 10, 10, Integer.MAX_VALUE).
                         addComponent(messageLabel, 10, 10, Integer.MAX_VALUE).
-                        addComponent(timeLabel, 10, 10, Integer.MAX_VALUE).
-                        addComponent(deleteButton, 10, 10, Integer.MAX_VALUE)
+                        addComponent(timeLabel, 10, 10, Integer.MAX_VALUE)
                 );
 
         GroupLayout.ParallelGroup vg = layout.createParallelGroup();
@@ -76,12 +76,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
                 addGroup(layout.createSequentialGroup().
                         addComponent(userLabel).
                         addComponent(messageLabel).
-                        addComponent(timeLabel).
-                        addComponent(deleteButton));
-                       
-        if (!isLoggedUserAdmin) {
-            deleteButton.setVisible(false);
-        }
+                        addComponent(timeLabel));
 
         layout.linkSize(SwingConstants.VERTICAL, imageLabel);
 
@@ -133,7 +128,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
 
         return this;
     }
-
+    
     private void adjustColors(Color bg, Color fg, JComponent... components) {
         for (JComponent c : components) {
             c.setForeground(fg);

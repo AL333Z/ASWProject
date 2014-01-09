@@ -17,8 +17,10 @@ public class UserSearchApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
+    
     DefaultListModel model = new DefaultListModel<>();
     final JList jlist = new JList(model);
+    JButton deleteBtn;
     
     public void init() {
 
@@ -39,31 +41,48 @@ public class UserSearchApplet extends JApplet {
         }
     }
 
+    public void start() {
+        // delete button is only for admin users
+        
+        if (getParameter("isAdmin") != null && getParameter("isAdmin").equals("Y")) {
+            deleteBtn.setVisible(true);
+        } else {
+            deleteBtn.setVisible(false);
+        }
+    }
+
     private void updateUi() {
 
         // setting the layout
         Container cp = getContentPane();
         cp.setLayout(null);
 
-        // textfield and button, to perform search
+        // textfield and button, to perform search and delete users
         final JTextField field = new JTextField();
 
-        JButton btn = new JButton("Search");
-        btn.setPreferredSize(new Dimension(200, 40));
+        JButton searchBtn = new JButton("Search");
 
-        boolean isAdmin = false;
-        if (getParameter("isAdmin") != null && getParameter("isAdmin").equals("Y")) {
-            isAdmin = true;
-        }
+        deleteBtn = new JButton("Delete selected user");
+        deleteBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // delete selected user
+                int indexToDelete = jlist.getSelectedIndex();
+                if (indexToDelete >= 0) {
+                    new UserDeleterWorker(indexToDelete).execute();
+                }
+
+            }
+        });
 
         // list to show results
-        UserListCellRenderer renderer = new UserListCellRenderer(isAdmin);
-
+        UserListCellRenderer renderer = new UserListCellRenderer();
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
 
         // add listener to button
-        btn.addActionListener(new ActionListener() {
+        searchBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UserDownloadWorker dw = new UserDownloadWorker(field.getText());
@@ -75,8 +94,11 @@ public class UserSearchApplet extends JApplet {
         field.setBounds(20, 20, 500, 40);
         cp.add(field);
 
-        btn.setBounds(540, 20, 100, 40);
-        cp.add(btn);
+        searchBtn.setBounds(540, 20, 100, 40);
+        cp.add(searchBtn);
+
+        deleteBtn.setBounds(660, 20, 180, 40);
+        cp.add(deleteBtn);
 
         scrollPane.setBounds(20, 80, 800, 400);
         cp.add(scrollPane);
@@ -125,7 +147,7 @@ public class UserSearchApplet extends JApplet {
         protected void process(java.util.List<NodeList> chunks) {
             // clean the list
             model.removeAllElements();
-            
+
             NodeList usersList = chunks.get(0);
             for (int i = 0; i < usersList.getLength(); i++) {
                 Element userElem = (Element) usersList.item(i);
@@ -139,6 +161,48 @@ public class UserSearchApplet extends JApplet {
                 model.addElement(usr);
             }
         }
+    }
+
+    private class UserDeleterWorker extends SwingWorker<Void, Integer> {
+
+        private Integer index;
+
+        UserDeleterWorker(Integer indexToDelete) {
+            this.index = indexToDelete;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            mngXML = new ManageXML();
+            Document data = mngXML.newDocument();
+
+            User usr = (User) model.getElementAt(index);
+
+            // node containing username to delete
+            Element searchTerm = data.createElement("username");
+            searchTerm.appendChild(data.createTextNode(usr.username));
+
+            // root node
+            Element rootReq = data.createElement("delete");
+
+            // build the xml
+            rootReq.appendChild(searchTerm);
+            data.appendChild(rootReq);
+
+            final LinkedList<User> res = new LinkedList<>();
+
+            Document answer = hc.execute("users", data);
+
+            publish(index);
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            // clean the deleted element from the model
+            model.remove(index);
+        }
+
     }
 
 }

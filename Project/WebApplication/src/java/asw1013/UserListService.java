@@ -39,15 +39,24 @@ public class UserListService extends AbstractXmlServiceServlet {
                 // TODO get from XML the start and stop numbers of users to sent (pagination)
                 UserListFile userFile = new UserListFile();
                 UserList userList = null;
-                
+
                 if (searchTerm == null || searchTerm.isEmpty()) {
                     userList = userFile.readFile();
                 } else {
-                    userList = userFile.searchUsers(searchTerm);                            
+                    userList = userFile.searchUsers(searchTerm);
                 }
 
                 sendUserList(userList, response.getOutputStream(), mngXML);
 
+                break;
+            }
+            case "delete": {
+                Element recvRoot = data.getDocumentElement();
+                String usernameToDelete = recvRoot.getElementsByTagName("username").item(0).getTextContent();
+                
+                UserListFile userFile = new UserListFile();
+                userFile.deleteUser(usernameToDelete);
+                
                 break;
             }
         }
@@ -64,5 +73,5 @@ public class UserListService extends AbstractXmlServiceServlet {
         mngXML.transform(os, doc);
         os.close();
     }
-
+    
 }
