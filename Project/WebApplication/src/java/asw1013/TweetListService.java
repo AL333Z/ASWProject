@@ -29,7 +29,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
     protected void operations(Document data, HttpSession session, 
             HttpServletRequest request, HttpServletResponse response, 
             ManageXML mngXML) throws Exception {
-       
+        
         String operation = data.getElementsByTagName("operation").item(0).getTextContent();
         
         if(operation.equals("getTweets")){
@@ -76,7 +76,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
 
             AsyncContext asyncContext = request.startAsync();
 
-            asyncContext.setTimeout(10 * 1000);
+            asyncContext.setTimeout(2 * 1000);
             asyncContext.addListener(new AsyncListener() {
                 @Override
                 public void onTimeout(AsyncEvent e) throws IOException {
