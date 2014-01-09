@@ -1,7 +1,10 @@
 package asw1013;
 
+import java.awt.Container;
+import java.awt.GridLayout;
 import javax.swing.JApplet;
-import java.awt.*;
+import java.util.Arrays;
+import java.util.Vector;
 import javax.swing.*;
 import org.w3c.dom.*;
 
@@ -17,15 +20,17 @@ public class ListApplet extends JApplet {
 
     int lastDownloadedTweet = 0;
 
-    // TODO replace with actual data
-    Object[][] rows = {
-        {"al333z", "funziona davvero", "1 ora fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash1/186727_1574644517_1361820427_q.jpg"},
-        {"mattibal", "pensa te quante bestemmie ci fa dire sta merda..", "2 ore fa","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg"},
-        {"satana", "cloro al clero.", "2 giorni fa",""}
-    };
+    Object[][] testdata
+            = {
+                {"al333z", "funziona davvero", "1 ora fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash1/186727_1574644517_1361820427_q.jpg"},
+                {"mattibal", "pensa te quante bestemmie ci fa dire sta merda..", "2 ore fa", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg"},
+                {"satana", "cloro al clero.", "2 giorni fa", ""}
+            };
+    
+   DefaultListModel model;
+    
 
     public void init() {
-
         try {
             hc.setSessionId(getParameter("sessionId"));
             hc.setBase(getDocumentBase());
@@ -34,40 +39,27 @@ public class ListApplet extends JApplet {
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    updateUi();
+                    
+                    // Initialize the Swing UI
+                    Container cp = getContentPane();
+                    cp.setLayout(new GridLayout(1, 1));
+
+                    model = new DefaultListModel<Object[]>();
+                    model.addElement(testdata[0]);
+                    JList jlist = new JList(model);
+                    jlist.setCellRenderer(new EntryListCellRenderer());
+                    JScrollPane scrollPane = new JScrollPane(jlist);
+                    cp.add(scrollPane);
+                    model.addElement(testdata[1]);
                 }
             });
 
-
-            /*new SwingWorker<Void, NodeList>(){
-             @Override
-             protected Void doInBackground() throws Exception {
-             while(true){
-             NodeList tweets = getTweets();
-             publish(tweets);
-             waitForUpdate();
-             }
-             }
-
-             @Override
-             protected void process(java.util.List<NodeList> chunks) {
-             NodeList tweetsList = chunks.get(0);
-
-             // TODO Add tweets to the UI
-             for (int i = 0; i < tweetsList.getLength(); i++) {
-             Element tweetElem = (Element) tweetsList.item(i);
-             // TODO add data from this tweetElem to the swing UI
-             // example:
-             tweetElem.getElementsByTagName("message").item(0).getTextContent();
-             }
-             }
-                
-             }.execute();*/
         } catch (Exception e) {
 
         }
     }
-
+    
+    
     private NodeList getTweets() throws Exception {
 
         // prepare the request xml
@@ -105,16 +97,28 @@ public class ListApplet extends JApplet {
         }
     }
 
-    private void updateUi() {
 
-        Container cp = getContentPane();
-        cp.setLayout(new GridLayout(1, 1));
+    private class TweetDownloadWorker extends SwingWorker<Void, NodeList> {
+        
+        @Override
+        protected Void doInBackground() throws Exception {
+            NodeList tweets = getTweets();
+            publish(tweets);
+            return null;
+        }
+        
+        @Override
+        protected void process(java.util.List<NodeList> chunks) {
 
-        JList jlist = new JList(rows);
-        EntryListCellRenderer renderer = new EntryListCellRenderer();
-        jlist.setCellRenderer(renderer);
-        JScrollPane scrollPane = new JScrollPane(jlist);
-        cp.add(scrollPane);
+            NodeList tweetsList = chunks.get(0);
+
+            // TODO Add tweets to the UI
+            for (int i = 0; i < tweetsList.getLength(); i++) {
+                Element tweetElem = (Element) tweetsList.item(i);
+                // TODO add data from this tweetElem to the swing UI
+                // example:
+                tweetElem.getElementsByTagName("message").item(0).getTextContent();
+            }
+        }
     }
-
 }
