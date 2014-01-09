@@ -17,8 +17,9 @@ public class UserSearchApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
-    final JList jlist = new JList();
-
+    DefaultListModel model = new DefaultListModel<>();
+    final JList jlist = new JList(model);
+    
     public void init() {
 
         try {
@@ -122,11 +123,10 @@ public class UserSearchApplet extends JApplet {
 
         @Override
         protected void process(java.util.List<NodeList> chunks) {
-
+            // clean the list
+            model.removeAllElements();
+            
             NodeList usersList = chunks.get(0);
-
-            final LinkedList<User> res = new LinkedList<>();
-
             for (int i = 0; i < usersList.getLength(); i++) {
                 Element userElem = (Element) usersList.item(i);
 
@@ -135,11 +135,9 @@ public class UserSearchApplet extends JApplet {
                 usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
                 usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
 
-                res.add(usr);
+                // update the list
+                model.addElement(usr);
             }
-
-            // update the list
-            jlist.setListData(res.toArray());
         }
     }
 

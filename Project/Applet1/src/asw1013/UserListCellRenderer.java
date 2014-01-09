@@ -101,8 +101,6 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
             User usr = (User) value;
             user = usr.username;
             message = usr.email;
-//            time = (String) values[2];
-//            img = (String) values[3];
         }
 
         if (user == null) {
