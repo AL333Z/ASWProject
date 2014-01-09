@@ -1,9 +1,11 @@
 package asw1013;
 
+import asw1013.entity.Tweet;
 import asw1013.util.TweetListFile;
 import asw1013.entity.TweetList;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.LinkedList;
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
@@ -54,9 +56,13 @@ public class TweetListService extends AbstractXmlServiceServlet{
             
         } else if (operation.equals("postTweet")){
             
-            // TODO store the new tweet in the db
+            Tweet tweet = new Tweet();
+            tweet.message = data.getElementsByTagName("tweetText").item(0).getTextContent();
+            tweet.date = new Date();
+            tweet.username = (String) session.getAttribute("username");
             
-            
+            TweetListFile tweetFile = new TweetListFile();
+            tweetFile.addTweet(tweet);
             
             // Notify the event to listeners
             synchronized (this) {
@@ -68,6 +74,9 @@ public class TweetListService extends AbstractXmlServiceServlet{
                 }
                 contexts.clear();
             }
+            
+            // Close the output stream of this connection
+            response.getOutputStream().close();
             
         } else if(operation.equals("waitForUpdate")) {
             

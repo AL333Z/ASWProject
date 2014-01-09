@@ -29,7 +29,7 @@ public class TweetListFile {
         mngXML = new ManageXML();
     }
     
-    public TweetList readFile() throws Exception{
+    public synchronized TweetList readFile() throws Exception{
         if(!TWEET_FILE.exists()){
             createFile();
         }
@@ -40,13 +40,19 @@ public class TweetListFile {
         return tweets;
     }
     
-    public void writeFile(TweetList tweetList) throws Exception {
+    public synchronized void writeFile(TweetList tweetList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
         marsh.marshal(tweetList, doc);
         OutputStream out = new FileOutputStream(TWEET_FILE);
         mngXML.transform(out, doc);
         out.close();
+    }
+    
+    public synchronized void addTweet(Tweet tweet) throws Exception {
+        TweetList list = readFile();
+        list.tweets.add(tweet);
+        writeFile(list);
     }
     
     private void createFile() throws Exception {

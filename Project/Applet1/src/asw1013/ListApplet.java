@@ -78,11 +78,11 @@ public class ListApplet extends JApplet {
         rootReq.appendChild(startTweetElem);
         data.appendChild(rootReq);
         
-        showDocument(data);
+        //showDocument(data);
 
         Document answer = hc.execute("tweets", data);
         
-        showDocument(answer);
+        //showDocument(answer);
 
         NodeList tweetsList = answer.getElementsByTagName("tweets");
         return tweetsList;

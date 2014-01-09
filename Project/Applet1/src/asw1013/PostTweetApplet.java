@@ -102,7 +102,6 @@ public class PostTweetApplet extends JApplet {
 
         @Override
         protected void process(List<Void> chunks) {
-            super.process(chunks); //To change body of generated methods, choose Tools | Templates.
             button.setEnabled(true);
             field.setEnabled(true);
         }        
