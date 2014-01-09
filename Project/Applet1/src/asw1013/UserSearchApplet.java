@@ -42,7 +42,7 @@ public class UserSearchApplet extends JApplet {
 
         // setting the layout
         Container cp = getContentPane();
-        cp.setLayout(new GridBagLayout());
+        cp.setLayout(null);
 
         // textfield and button, to perform search
         final JTextField field = new JTextField();
@@ -50,8 +50,14 @@ public class UserSearchApplet extends JApplet {
         JButton btn = new JButton("Search");
         btn.setPreferredSize(new Dimension(200, 40));
 
+        boolean isAdmin = false;
+        if (getParameter("isAdmin") != null && getParameter("isAdmin").equals("Y")) {
+            isAdmin = true;
+        }
+
         // list to show results
-        UserListCellRenderer renderer = new UserListCellRenderer();
+        UserListCellRenderer renderer = new UserListCellRenderer(isAdmin);
+
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
 
@@ -65,24 +71,15 @@ public class UserSearchApplet extends JApplet {
         });
 
         // add components
-        GridBagConstraints c = new GridBagConstraints();
+        field.setBounds(20, 20, 500, 40);
+        cp.add(field);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.weightx = 0.5;
-        c.gridx = 0;
-        c.gridy = 0;
-        cp.add(field, c);
+        btn.setBounds(540, 20, 100, 40);
+        cp.add(btn);
 
-        c.gridx = 1;
-        cp.add(btn, c);
+        scrollPane.setBounds(20, 80, 800, 400);
+        cp.add(scrollPane);
 
-        c.gridx = 0;
-        c.gridy = 1;
-        c.weightx = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.PAGE_END;
-        cp.add(scrollPane, c);
     }
 
     private NodeList getUsers(String st) throws Exception {

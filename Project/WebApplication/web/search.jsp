@@ -21,8 +21,11 @@ and open the template in the editor.
             <APPLET codebase="applet/" code="asw1013.UserSearchApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
+                
                 <param name="sessionId" value="<%= session.getId()%>">
-
+                <param name="isLoggedIn" value="<%= (session.getAttribute("isLoggedIn") != null && ((Boolean)session.getAttribute("isLoggedIn")) == true) ? "Y" : "N" %>">
+                <param name="isAdmin" value="<%= (session.getAttribute("isAdmin") != null && ((Boolean)session.getAttribute("isAdmin")) == true) ? "Y" : "N" %>">
+                
             </APPLET>
         </div> 
     </body>
