@@ -34,12 +34,18 @@ public class UserListService extends AbstractXmlServiceServlet {
 
             case "userlist": {
                 Element recvRoot = data.getDocumentElement();
+                String searchTerm = recvRoot.getElementsByTagName("searchTerm").item(0).getTextContent();
+
                 // TODO get from XML the start and stop numbers of users to sent (pagination)
-
                 UserListFile userFile = new UserListFile();
-                UserList userList = userFile.readFile();
+                UserList userList = null;
+                
+                if (searchTerm == null || searchTerm.isEmpty()) {
+                    userList = userFile.readFile();
+                } else {
+                    userList = userFile.searchUsers(searchTerm);                            
+                }
 
-                // TODO filter from the userlist only the users that we want to send to the client
                 sendUserList(userList, response.getOutputStream(), mngXML);
 
                 break;

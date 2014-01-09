@@ -12,30 +12,13 @@ and open the template in the editor.
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="UTF-8" />
-        <title>Registration</title>
+        <title>Search</title>
         <link rel="stylesheet" type="text/css" href="style-sheets/style.css" />
     </head>
     <body>	
         <%@ include file="/WEB-INF/jspf/navigation.jspf" %>
-        <%
-            if (!(session.getAttribute("isLoggedIn") != null
-                    && (Boolean) session.getAttribute("isLoggedIn"))) {
-        %>
-        %>    
-        <div class="container" >
-            <div class="wrapper">
-                <%@ include file="/WEB-INF/jspf/login.jspf" %>
-            </div>
-            <div class="wrapper">
-                <%@ include file="/WEB-INF/jspf/registration.jspf" %>
-            </div>  
-        </div>  
-        <%
-            }
-        %> 
-
         <div class="container">
-            <APPLET codebase="applet/" code="asw1013.ListApplet" 
+            <APPLET codebase="applet/" code="asw1013.UserSearchApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">
