@@ -7,7 +7,7 @@
     user.pass = request.getParameter("passwordsignup");
     user.username = request.getParameter("usernamesignup");
 
-    UserListFile ulf = new UserListFile();
+    UserListFile ulf = UserListFile.getInstance();
     ulf.registerUser(user);
 
     // setting user as logged in
