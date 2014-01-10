@@ -6,7 +6,7 @@
     user.pass = request.getParameter("password");
     user.username = request.getParameter("username");
 
-    UserListFile ulf = new UserListFile();
+    UserListFile ulf = UserListFile.getInstance();
     user = ulf.loginUser(user);
     
     // setting user as logged in
