@@ -37,7 +37,7 @@ public class UserListService extends AbstractXmlServiceServlet {
                 String searchTerm = recvRoot.getElementsByTagName("searchTerm").item(0).getTextContent();
 
                 // TODO get from XML the start and stop numbers of users to sent (pagination)
-                UserListFile userFile = new UserListFile();
+                UserListFile userFile = UserListFile.getInstance();
                 UserList userList = null;
 
                 if (searchTerm == null || searchTerm.isEmpty()) {
@@ -54,7 +54,7 @@ public class UserListService extends AbstractXmlServiceServlet {
                 Element recvRoot = data.getDocumentElement();
                 String usernameToDelete = recvRoot.getElementsByTagName("username").item(0).getTextContent();
                 
-                UserListFile userFile = new UserListFile();
+                UserListFile userFile = UserListFile.getInstance();
                 userFile.deleteUser(usernameToDelete);
                 
                 break;
