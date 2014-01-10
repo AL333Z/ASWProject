@@ -96,15 +96,14 @@ public class PostTweetApplet extends JApplet {
             
             Document answer = hc.execute("tweets", data);
             
-            process(null);
             return null;
-        }
+        } 
 
         @Override
-        protected void process(List<Void> chunks) {
+        protected void done() {
             button.setEnabled(true);
             field.setEnabled(true);
-        }        
+        }  
     }
 
 }
