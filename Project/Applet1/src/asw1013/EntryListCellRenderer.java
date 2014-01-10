@@ -6,7 +6,6 @@ package asw1013;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import javax.swing.GroupLayout;
@@ -35,8 +34,11 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
+    private URL base = null;
 
-    EntryListCellRenderer() {
+    EntryListCellRenderer(URL documentBase) {
+        base = documentBase;
+        
         userLabel = new JLabel(" ");
         messageLabel = new JLabel(" ");
         timeLabel = new JLabel(" ");
@@ -93,7 +95,7 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
             user = (String) values[0];
             message = (String) values[1];
             time = (String) values[2];
-            img = (String) values[3];
+            img = base.getPath()+"/pic?username="+user;
         }
 
         if (user == null) {
@@ -111,7 +113,8 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
         timeLabel.setText(time);
 
         try {
-            imageLabel.setIcon(getImageIcon(img, 100));
+            String path = new URL(base, "pic").toString()+"?username="+user;
+            imageLabel.setIcon(getImageIcon(path, 100));
         } catch (Exception ex) {
             imageLabel.setIcon(null);
         }

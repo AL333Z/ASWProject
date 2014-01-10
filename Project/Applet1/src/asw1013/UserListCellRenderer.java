@@ -7,17 +7,11 @@ package asw1013;
 import asw1013.entity.User;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -41,9 +35,11 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
-
-    UserListCellRenderer() {
-
+    private URL base = null;
+    
+    UserListCellRenderer(URL documentBase) {
+        base = documentBase;
+        
         userLabel = new JLabel(" ");
         messageLabel = new JLabel(" ");
         timeLabel = new JLabel(" ");
@@ -95,21 +91,11 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         String user = null;
         String message = null;
         String time = null;
-        String img = null;
 
         if (value instanceof User) {
             User usr = (User) value;
             user = usr.username;
             message = usr.email;
-
-            //TODO replace..
-            if (index == 0) {
-                img = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash1/186727_1574644517_1361820427_q.jpg";
-            } else if (index == 1) {
-                img = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg";
-            } else {
-                img = "https://fbcdn-profille-ak-ash1/277109_132707500076838_551252056_q.jpg";
-            }
 
         }
 
@@ -122,13 +108,14 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         if (time == null) {
             time = "";
         }
-
+                
         userLabel.setText(user);
         messageLabel.setText(message);
         timeLabel.setText(time);
         
         try {
-            imageLabel.setIcon(getImageIcon(img, 100));
+            String path = new URL(base, "pic").toString()+"?username="+user;
+            imageLabel.setIcon(getImageIcon(path, 100));
         } catch (Exception ex) {
             imageLabel.setIcon(null);
         }
