@@ -35,7 +35,7 @@ and open the template in the editor.
         <div class="container">
             <applet codebase="applet/" code="asw1013.PostTweetApplet"
                     archive="Lib1.jar,Applet1.jar"
-                    width=960 height=500>
+                    width=960 height=100>
                 <param name="sessionId" value="<%= session.getId()%>">
             </applet>
         </div>
