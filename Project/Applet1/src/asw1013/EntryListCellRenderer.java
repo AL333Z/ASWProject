@@ -5,9 +5,12 @@
 package asw1013;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -106,11 +109,10 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
         userLabel.setText(message);
         messageLabel.setText(user);
         timeLabel.setText(time);
-        
+
         try {
-            URL url = new URL(img);
-            new ImageLoader(imageLabel, url).execute();
-        } catch (MalformedURLException ex) {
+            imageLabel.setIcon(getImageIcon(img, 100));
+        } catch (Exception ex) {
             imageLabel.setIcon(null);
         }
 
@@ -130,5 +132,16 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
             c.setForeground(fg);
             c.setBackground(bg);
         }
+    }
+
+    private Icon getImageIcon(String path, int size) throws Exception {
+        if (path != null) {
+            Image image = ImageCache.getInstance().getImage(
+                    imageLabel, new URI(path), size, size);
+            if (image != null) {
+                return new ImageIcon(image);
+            }
+        }
+        return null;
     }
 }
