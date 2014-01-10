@@ -6,11 +6,16 @@ package asw1013;
 
 import asw1013.entity.User;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -96,6 +101,16 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
             User usr = (User) value;
             user = usr.username;
             message = usr.email;
+
+            //TODO replace..
+            if (index == 0) {
+                img = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash1/186727_1574644517_1361820427_q.jpg";
+            } else if (index == 1) {
+                img = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/c35.34.435.435/s160x160/379902_2720385459044_1006392870_n.jpg";
+            } else {
+                img = "https://fbcdn-profille-ak-ash1/277109_132707500076838_551252056_q.jpg";
+            }
+
         }
 
         if (user == null) {
@@ -111,11 +126,10 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         userLabel.setText(user);
         messageLabel.setText(message);
         timeLabel.setText(time);
-
+        
         try {
-            URL url = new URL(img);
-            new ImageLoader(imageLabel, url).execute();
-        } catch (MalformedURLException ex) {
+            imageLabel.setIcon(getImageIcon(img, 100));
+        } catch (Exception ex) {
             imageLabel.setIcon(null);
         }
 
@@ -129,12 +143,23 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
 
         return this;
     }
-    
+
     private void adjustColors(Color bg, Color fg, JComponent... components) {
         for (JComponent c : components) {
             c.setForeground(fg);
             c.setBackground(bg);
         }
+    }
+
+    private Icon getImageIcon(String path, int size) throws Exception {
+        if (path != null) {
+            Image image = ImageCache.getInstance().getImage(
+                    imageLabel, new URI(path), size, size);
+            if (image != null) {
+                return new ImageIcon(image);
+            }
+        }
+        return null;
     }
 
 }
