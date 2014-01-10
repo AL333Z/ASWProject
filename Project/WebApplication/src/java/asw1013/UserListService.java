@@ -1,6 +1,5 @@
 package asw1013;
 
-import asw1013.entity.User;
 import asw1013.util.UserListFile;
 import asw1013.entity.UserList;
 import java.io.OutputStream;
@@ -12,7 +11,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Service from which a client can get a list of users
@@ -51,6 +49,11 @@ public class UserListService extends AbstractXmlServiceServlet {
                 break;
             }
             case "delete": {
+                
+                if(! ((boolean) session.getAttribute("isAdmin")) ){
+                    return; // Hacking attempt!!
+                }
+                
                 Element recvRoot = data.getDocumentElement();
                 String usernameToDelete = recvRoot.getElementsByTagName("username").item(0).getTextContent();
                 
