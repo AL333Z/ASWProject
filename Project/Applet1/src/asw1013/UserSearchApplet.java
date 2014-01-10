@@ -1,11 +1,13 @@
 package asw1013;
 
+import asw1013.entity.Following;
 import asw1013.entity.User;
 import javax.swing.JApplet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import org.w3c.dom.*;
 
@@ -18,9 +20,10 @@ public class UserSearchApplet extends JApplet {
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
     
-    DefaultListModel model = new DefaultListModel<Object[]>();
+    DefaultListModel<User> model = new DefaultListModel<User>();
     final JList jlist = new JList(model);
     JButton deleteBtn;
+    final JTextField field = new JTextField();
     
     public void init() {
 
@@ -32,7 +35,7 @@ public class UserSearchApplet extends JApplet {
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    updateUi();
+                    initUi();
                 }
             });
 
@@ -51,20 +54,16 @@ public class UserSearchApplet extends JApplet {
         }
     }
 
-    private void updateUi() {
+    private void initUi() {
 
         // setting the layout
         Container cp = getContentPane();
         cp.setLayout(null);
 
-        // textfield and button, to perform search and delete users
-        final JTextField field = new JTextField();
-
-        JButton searchBtn = new JButton("Search");
+        final JButton searchBtn = new JButton("Search");
 
         deleteBtn = new JButton("Delete selected user");
         deleteBtn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 // delete selected user
@@ -72,7 +71,6 @@ public class UserSearchApplet extends JApplet {
                 if (indexToDelete >= 0) {
                     new UserDeleterWorker(indexToDelete).execute();
                 }
-
             }
         });
 
@@ -103,6 +101,17 @@ public class UserSearchApplet extends JApplet {
         scrollPane.setBounds(20, 80, 800, 400);
         cp.add(scrollPane);
 
+        jlist.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 2) { // User has double-clicked
+                    int index = list.locationToIndex(evt.getPoint());
+                    User usr = (User) model.getElementAt(index);
+                    new ToggleFollowWorker(usr.username).execute();
+                }
+            }
+        });
     }
 
     private NodeList getUsers(String st) throws Exception {
@@ -120,8 +129,6 @@ public class UserSearchApplet extends JApplet {
         // build the xml
         rootReq.appendChild(searchTerm);
         data.appendChild(rootReq);
-
-        final LinkedList<User> res = new LinkedList<User>();
 
         Document answer = hc.execute("users", data);
         NodeList userList = answer.getElementsByTagName("users");
@@ -156,6 +163,11 @@ public class UserSearchApplet extends JApplet {
                 User usr = new User();
                 usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
                 usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
+                if(userElem.getElementsByTagName("following").getLength()==0){
+                    usr.following = null;
+                } else {
+                    usr.following = new Following();
+                }
 
                 // update the list
                 model.addElement(usr);
@@ -189,11 +201,8 @@ public class UserSearchApplet extends JApplet {
             rootReq.appendChild(searchTerm);
             data.appendChild(rootReq);
 
-            final LinkedList<User> res = new LinkedList<User>();
-
             Document answer = hc.execute("users", data);
 
-            publish(index);
             return null;
         }
 
@@ -203,6 +212,38 @@ public class UserSearchApplet extends JApplet {
             model.remove(index);
         }
 
+    }
+    
+    
+    
+    private class ToggleFollowWorker extends SwingWorker<Void, Void> {
+
+        private String username;
+        
+        public ToggleFollowWorker(String username){
+            this.username = username;
+        }
+        
+        @Override
+        protected Void doInBackground() throws Exception {
+            
+            Document data = mngXML.newDocument();
+            Element usernameElem = data.createElement("username");
+            usernameElem.appendChild(data.createTextNode(username));
+            Element root = data.createElement("toggleFollow");
+            root.appendChild(usernameElem);
+            data.appendChild(root);
+            
+            Document answer = hc.execute("users", data);
+            
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            new UserDownloadWorker(field.getText()).execute();
+        }
+        
     }
 
 }

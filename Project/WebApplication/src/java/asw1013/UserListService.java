@@ -1,8 +1,12 @@
 package asw1013;
 
+import asw1013.entity.Following;
+import asw1013.entity.User;
 import asw1013.util.UserListFile;
 import asw1013.entity.UserList;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +38,6 @@ public class UserListService extends AbstractXmlServiceServlet {
                 Element recvRoot = data.getDocumentElement();
                 String searchTerm = recvRoot.getElementsByTagName("searchTerm").item(0).getTextContent();
 
-                // TODO get from XML the start and stop numbers of users to sent (pagination)
                 UserListFile userFile = UserListFile.getInstance();
                 UserList userList = null;
 
@@ -43,13 +46,23 @@ public class UserListService extends AbstractXmlServiceServlet {
                 } else {
                     userList = userFile.searchUsers(searchTerm);
                 }
-
+                
+                // replace Following from Users with an empty list if I'm following this user, with null otherwise
+                List<String> following = userFile.getUserByUsername((String)session.getAttribute("username")).following.usernames;
+                for(User user : userList.users){
+                    if(following.contains(user.username)){
+                        user.following = new Following(); // I'm following this user
+                    } else {
+                        user.following = null; // I'm not following this user
+                    }
+                }
+                
                 sendUserList(userList, response.getOutputStream(), mngXML);
 
                 break;
             }
+            
             case "delete": {
-                
                 if(! ((boolean) session.getAttribute("isAdmin")) ){
                     return; // Hacking attempt!!
                 }
@@ -60,6 +73,14 @@ public class UserListService extends AbstractXmlServiceServlet {
                 UserListFile userFile = UserListFile.getInstance();
                 userFile.deleteUser(usernameToDelete);
                 
+                break;
+            }
+        
+            case "toggleFollow": {
+                Element recvRoot = data.getDocumentElement();
+                String followingUsername = recvRoot.getElementsByTagName("username").item(0).getTextContent();
+                UserListFile userFile = UserListFile.getInstance();
+                userFile.toggleFollowing( (String)session.getAttribute("username"), followingUsername);
                 break;
             }
         }

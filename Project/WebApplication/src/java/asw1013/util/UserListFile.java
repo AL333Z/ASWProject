@@ -35,12 +35,12 @@ import org.w3c.dom.Document;
 public class UserListFile {
 
     public static final File USER_FILE = new File("users.xml");
-    
+
     private volatile static UserListFile instance = null;
 
     private JAXBContext context;
     private ManageXML mngXML;
-    
+
     public static UserListFile getInstance() throws Exception {
         if(instance == null){
             synchronized(UserListFile.class){
@@ -102,23 +102,42 @@ public class UserListFile {
         }
         return returnList;
     }
-    
-    
+
+    public synchronized void toggleFollowing(String followerUsername, String followingUsername) throws Exception {
+        UserList ul = readFile();
+        for(User usr : ul.users){
+            if(usr.username.equals(followerUsername)){
+                if(usr.following.usernames.contains(followingUsername)){
+                    usr.following.usernames.remove(followingUsername);
+                } else {
+                    usr.following.usernames.add(followingUsername);
+                }
+                writeFile(ul);
+                return;
+            }
+        }
+    }
 
     public synchronized User loginUser(User user) throws Exception {
+        User usr = getUserByUsername(user.username);
+        if (usr.pass.equals(user.pass)) {
+            return usr;
+        } else {
+            throw new Exception("Wrong password.");
+        }
+    }
+
+    public synchronized User getUserByUsername(String username) throws Exception {
         UserList ul = readFile();
-        for (User usr : ul.users) {
-            if (usr.username.equals(user.username)) {
-                if (usr.pass.equals(user.pass)) {
-                    return usr;
-                }
-                throw new Exception("Wrong password.");
+        for(User usr : ul.users){
+            if(usr.username.equals(username)){
+                return usr;
             }
         }
         throw new Exception("User does not exist.");
     }
 
-    public synchronized void writeFile(UserList userList) throws Exception {
+    private synchronized void writeFile(UserList userList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
         marsh.marshal(userList, doc);
@@ -133,7 +152,6 @@ public class UserListFile {
                 return true;
             }
         }
-
         return false;
     }
 

@@ -96,11 +96,13 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         String message = null;
         String time = null;
         String img = null;
+        boolean following = false;
 
         if (value instanceof User) {
             User usr = (User) value;
             user = usr.username;
             message = usr.email;
+            following = !(usr.following==null);
 
             //TODO replace..
             if (index == 0) {
@@ -137,8 +139,13 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
             adjustColors(list.getSelectionBackground(),
                     list.getSelectionForeground(), this, messageLabel, userLabel);
         } else {
-            adjustColors(list.getBackground(),
-                    list.getForeground(), this, messageLabel, userLabel);
+            if(!following) {
+                adjustColors(list.getBackground(),
+                        list.getForeground(), this, messageLabel, userLabel);
+            } else {
+                adjustColors(Color.decode("#ffffcc"),
+                        list.getForeground(), this, messageLabel, userLabel);
+            }
         }
 
         return this;
