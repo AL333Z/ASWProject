@@ -50,7 +50,7 @@ public class ListApplet extends JApplet {
                     model = new DefaultListModel<Object[]>();
                     model.addElement(testdata[0]);
                     JList jlist = new JList(model);
-                    jlist.setCellRenderer(new EntryListCellRenderer());
+                    jlist.setCellRenderer(new EntryListCellRenderer(getDocumentBase()));
                     JScrollPane scrollPane = new JScrollPane(jlist);
                     cp.add(scrollPane);
                 }

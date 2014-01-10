@@ -75,7 +75,7 @@ public class UserSearchApplet extends JApplet {
         });
 
         // list to show results
-        UserListCellRenderer renderer = new UserListCellRenderer();
+        UserListCellRenderer renderer = new UserListCellRenderer(getDocumentBase());
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
 
