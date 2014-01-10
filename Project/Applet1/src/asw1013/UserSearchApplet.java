@@ -18,7 +18,7 @@ public class UserSearchApplet extends JApplet {
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
     
-    DefaultListModel model = new DefaultListModel<>();
+    DefaultListModel model = new DefaultListModel<Object[]>();
     final JList jlist = new JList(model);
     JButton deleteBtn;
     
@@ -121,7 +121,7 @@ public class UserSearchApplet extends JApplet {
         rootReq.appendChild(searchTerm);
         data.appendChild(rootReq);
 
-        final LinkedList<User> res = new LinkedList<>();
+        final LinkedList<User> res = new LinkedList<User>();
 
         Document answer = hc.execute("users", data);
         NodeList userList = answer.getElementsByTagName("users");
@@ -189,7 +189,7 @@ public class UserSearchApplet extends JApplet {
             rootReq.appendChild(searchTerm);
             data.appendChild(rootReq);
 
-            final LinkedList<User> res = new LinkedList<>();
+            final LinkedList<User> res = new LinkedList<User>();
 
             Document answer = hc.execute("users", data);
 
