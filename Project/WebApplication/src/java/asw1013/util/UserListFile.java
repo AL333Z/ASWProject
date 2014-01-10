@@ -35,11 +35,24 @@ import org.w3c.dom.Document;
 public class UserListFile {
 
     public static final File USER_FILE = new File("users.xml");
+    
+    private volatile static UserListFile instance = null;
 
     private JAXBContext context;
     private ManageXML mngXML;
+    
+    public static UserListFile getInstance() throws Exception {
+        if(instance == null){
+            synchronized(UserListFile.class){
+                if(instance == null){
+                    instance = new UserListFile();
+                }
+            }
+        }
+        return instance;
+    }
 
-    public UserListFile() throws Exception {
+    private UserListFile() throws Exception {
         context = JAXBContext.newInstance(UserList.class);
         mngXML = new ManageXML();
     }
@@ -89,6 +102,8 @@ public class UserListFile {
         }
         return returnList;
     }
+    
+    
 
     public synchronized User loginUser(User user) throws Exception {
         UserList ul = readFile();

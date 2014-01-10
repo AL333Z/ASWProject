@@ -38,7 +38,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
             
             // TODO get from XML the start and stop numbers of tweets to sent (pagination)
             
-            TweetListFile tweetFile = new TweetListFile();
+            TweetListFile tweetFile = TweetListFile.getInstance();
             TweetList tweetList = tweetFile.readFile();
 
             // TODO filter from the tweetlist only the tweets that we want to send to the client
@@ -61,7 +61,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
             tweet.date = new Date();
             tweet.username = (String) session.getAttribute("username");
             
-            TweetListFile tweetFile = new TweetListFile();
+            TweetListFile tweetFile = TweetListFile.getInstance();
             tweetFile.addTweet(tweet);
             
             // Notify the event to listeners

@@ -15,16 +15,32 @@ import javax.xml.bind.Unmarshaller;
 import org.w3c.dom.Document;
 
 /**
- * Utility class to read and write 
+ * Utility class to read and write data from the XML file of tweets.
+ * 
+ * This class is a singleton (only one instance per JVM is allowed) to solve
+ * concurrency problems.
  */
 public class TweetListFile {
     
     public static final File TWEET_FILE = new File("tweets.xml");
     
+    private volatile static TweetListFile instance = null;
+    
     private JAXBContext context;
     private ManageXML mngXML;
     
-    public TweetListFile() throws Exception {
+    public static TweetListFile getInstance() throws Exception {
+        if(instance == null){
+            synchronized(TweetListFile.class){
+                if(instance == null){
+                    instance = new TweetListFile();
+                }
+            }
+        }
+        return instance;
+    }
+    
+    private TweetListFile() throws Exception {
         context = JAXBContext.newInstance(TweetList.class);
         mngXML = new ManageXML();
     }
