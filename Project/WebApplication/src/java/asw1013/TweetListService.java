@@ -3,10 +3,12 @@ package asw1013;
 import asw1013.entity.Tweet;
 import asw1013.util.TweetListFile;
 import asw1013.entity.TweetList;
+import asw1013.util.UserListFile;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
 import javax.servlet.AsyncListener;
@@ -41,9 +43,21 @@ public class TweetListService extends AbstractXmlServiceServlet{
             TweetListFile tweetFile = TweetListFile.getInstance();
             TweetList tweetList = tweetFile.readFile();
 
-            // TODO filter from the tweetlist only the tweets that we want to send to the client
-            TweetList tweetListToSend = tweetList; //only for example
-
+            TweetList tweetListToSend;
+            String myUsername = (String) session.getAttribute("username");
+            if(myUsername == null){
+                tweetListToSend = tweetList;
+            } else {
+                UserListFile ufile = UserListFile.getInstance();
+                List<String> followingUsernames = ufile.getUserByUsername(myUsername).following.usernames;
+                tweetListToSend = new TweetList();
+                for(Tweet tweet : tweetList.tweets){
+                    if(followingUsernames.contains(tweet.username)){
+                        tweetListToSend.tweets.add(tweet);
+                    }
+                }
+            }
+            
             JAXBContext jc = JAXBContext.newInstance(TweetList.class);
             Marshaller marsh = jc.createMarshaller();
             Document doc = mngXML.newDocument();
