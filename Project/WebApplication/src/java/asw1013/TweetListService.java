@@ -52,7 +52,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
                 List<String> followingUsernames = ufile.getUserByUsername(myUsername).following.usernames;
                 tweetListToSend = new TweetList();
                 for(Tweet tweet : tweetList.tweets){
-                    if(followingUsernames.contains(tweet.username)){
+                    if(followingUsernames.contains(tweet.username) || tweet.username.equals(myUsername)){
                         tweetListToSend.tweets.add(tweet);
                     }
                 }
