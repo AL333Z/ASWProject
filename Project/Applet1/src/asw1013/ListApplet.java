@@ -21,13 +21,17 @@ import org.w3c.dom.*;
 public class ListApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
-    ManageXML mngXML;
+    ManageXML mngXML = null;
+    
     boolean logged = false;
+    String username = null;
     
     DefaultListModel model;
     
-
     public void init() {
+        
+        username = getParameter("username");
+        
         try {
             hc.setSessionId(getParameter("sessionId"));
             hc.setBase(getDocumentBase());

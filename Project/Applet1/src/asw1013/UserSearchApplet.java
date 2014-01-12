@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
 
@@ -22,8 +26,10 @@ public class UserSearchApplet extends JApplet {
 
     DefaultListModel<User> model = new DefaultListModel<User>();
     final JList jlist = new JList(model);
-    JButton deleteBtn;
     final JTextField field = new JTextField();
+
+    JButton deleteBtn;
+    JButton profileBtn;
 
     public void init() {
 
@@ -74,6 +80,25 @@ public class UserSearchApplet extends JApplet {
             }
         });
 
+        profileBtn = new JButton("Show selected user");
+        profileBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // delete selected user
+                int indexToShow = jlist.getSelectedIndex();
+                if (indexToShow >= 0) {
+                    
+                    User usr = (User) model.getElementAt(indexToShow);
+                    try {
+                        String path = new URL(getDocumentBase(), "profile.jsp").toString()+"?username="+usr.username;
+                        getAppletContext().showDocument(new URL(path));
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(UserSearchApplet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+
         // list to show results
         UserListCellRenderer renderer = new UserListCellRenderer(getDocumentBase());
         jlist.setCellRenderer(renderer);
@@ -95,7 +120,10 @@ public class UserSearchApplet extends JApplet {
         searchBtn.setBounds(540, 20, 100, 40);
         cp.add(searchBtn);
 
-        deleteBtn.setBounds(660, 20, 180, 40);
+        profileBtn.setBounds(660, 20, 160, 40);
+        cp.add(profileBtn);
+
+        deleteBtn.setBounds(840, 20, 160, 40);
         cp.add(deleteBtn);
 
         scrollPane.setBounds(20, 80, 800, 400);
@@ -109,7 +137,7 @@ public class UserSearchApplet extends JApplet {
                     int index = list.locationToIndex(evt.getPoint());
                     User usr = (User) model.getElementAt(index);
                     new ToggleFollowWorker(usr.username).execute();
-                } 
+                }
             }
         });
     }
