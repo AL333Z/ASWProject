@@ -91,6 +91,7 @@ public class PostTweetApplet extends JApplet {
         protected void done() {
             button.setEnabled(true);
             field.setEnabled(true);
+            field.setText("");
         }
     }
 

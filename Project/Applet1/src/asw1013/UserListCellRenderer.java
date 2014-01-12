@@ -6,6 +6,7 @@ package asw1013;
 
 import asw1013.entity.User;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.net.URI;
 import java.net.URL;
@@ -117,7 +118,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         
         try {
             String path = new URL(base, "pic").toString()+"?username="+user;
-            imageLabel.setIcon(getImageIcon(path, 100));
+            imageLabel.setIcon(getImageIcon(path, imageLabel.getSize()));
         } catch (Exception ex) {
             imageLabel.setIcon(null);
         }
@@ -145,10 +146,10 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         }
     }
 
-    private Icon getImageIcon(String path, int size) throws Exception {
+    private Icon getImageIcon(String path, Dimension size) throws Exception {
         if (path != null) {
             Image image = ImageCache.getInstance().getImage(
-                    imageLabel, new URI(path), size, size);
+                    imageLabel, new URI(path), (int)size.getWidth(), (int)size.getHeight());
             if (image != null) {
                 return new ImageIcon(image);
             }
