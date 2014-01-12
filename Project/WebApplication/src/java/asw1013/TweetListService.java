@@ -46,13 +46,24 @@ public class TweetListService extends AbstractXmlServiceServlet{
             TweetList tweetListToSend;
             String myUsername = (String) session.getAttribute("username");
             if(myUsername == null){
+                // Return tweets of all users
                 tweetListToSend = tweetList;
-            } else {
+            } else if(data.getElementsByTagName("tweetsOfUsername").getLength()==0){
+                // Return tweets of users I'm following
                 UserListFile ufile = UserListFile.getInstance();
                 List<String> followingUsernames = ufile.getUserByUsername(myUsername).following.usernames;
                 tweetListToSend = new TweetList();
                 for(Tweet tweet : tweetList.tweets){
                     if(followingUsernames.contains(tweet.username) || tweet.username.equals(myUsername)){
+                        tweetListToSend.tweets.add(tweet);
+                    }
+                }
+            } else {
+                // Return tweets of an user specified by the request
+                tweetListToSend = new TweetList();
+                String username = data.getElementsByTagName("tweetsOfUsername").item(0).getTextContent();
+                for(Tweet tweet : tweetList.tweets){
+                    if(tweet.username.equals(username)){
                         tweetListToSend.tweets.add(tweet);
                     }
                 }

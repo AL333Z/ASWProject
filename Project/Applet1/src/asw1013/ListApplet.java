@@ -70,6 +70,12 @@ public class ListApplet extends JApplet {
         Element op = data.createElement("operation");
         op.appendChild(data.createTextNode("getTweets"));
         rootReq.appendChild(op);
+        String tweetsOfUsername = getParameter("tweetsOfUsername");
+        if(tweetsOfUsername != null){
+            Element tweetsOfElem = data.createElement("tweetsOfUsername");
+            tweetsOfElem.appendChild(data.createTextNode(tweetsOfUsername));
+            rootReq.appendChild(tweetsOfElem);
+        }
         // TODO implement pagination
         //Element startTweetElem = data.createElement("startTweet");
         //startTweetElem.appendChild(data.createTextNode(lastDownloadedTweet + ""));
