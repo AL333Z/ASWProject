@@ -19,12 +19,12 @@ public class UserSearchApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML;
-    
+
     DefaultListModel<User> model = new DefaultListModel<User>();
     final JList jlist = new JList(model);
     JButton deleteBtn;
     final JTextField field = new JTextField();
-    
+
     public void init() {
 
         try {
@@ -46,7 +46,7 @@ public class UserSearchApplet extends JApplet {
 
     public void start() {
         // delete button is only for admin users
-        
+
         if (getParameter("isAdmin") != null && getParameter("isAdmin").equals("Y")) {
             deleteBtn.setVisible(true);
         } else {
@@ -109,7 +109,7 @@ public class UserSearchApplet extends JApplet {
                     int index = list.locationToIndex(evt.getPoint());
                     User usr = (User) model.getElementAt(index);
                     new ToggleFollowWorker(usr.username).execute();
-                }
+                } 
             }
         });
     }
@@ -163,7 +163,7 @@ public class UserSearchApplet extends JApplet {
                 User usr = new User();
                 usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
                 usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
-                if(userElem.getElementsByTagName("following").getLength()==0){
+                if (userElem.getElementsByTagName("following").getLength() == 0) {
                     usr.following = null;
                 } else {
                     usr.following = new Following();
@@ -213,29 +213,27 @@ public class UserSearchApplet extends JApplet {
         }
 
     }
-    
-    
-    
+
     private class ToggleFollowWorker extends SwingWorker<Void, Void> {
 
         private String username;
-        
-        public ToggleFollowWorker(String username){
+
+        public ToggleFollowWorker(String username) {
             this.username = username;
         }
-        
+
         @Override
         protected Void doInBackground() throws Exception {
-            
+
             Document data = mngXML.newDocument();
             Element usernameElem = data.createElement("username");
             usernameElem.appendChild(data.createTextNode(username));
             Element root = data.createElement("toggleFollow");
             root.appendChild(usernameElem);
             data.appendChild(root);
-            
+
             Document answer = hc.execute("users", data);
-            
+
             return null;
         }
 
@@ -243,7 +241,7 @@ public class UserSearchApplet extends JApplet {
         protected void done() {
             new UserDownloadWorker(field.getText()).execute();
         }
-        
+
     }
 
 }

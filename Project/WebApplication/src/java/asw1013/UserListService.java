@@ -46,41 +46,48 @@ public class UserListService extends AbstractXmlServiceServlet {
                 } else {
                     userList = userFile.searchUsers(searchTerm);
                 }
+
+                // replace Following from Users with an empty list if I'm 
+                // following this user, with null otherwise
                 
-                // replace Following from Users with an empty list if I'm following this user, with null otherwise
-                List<String> following = userFile.getUserByUsername((String)session.getAttribute("username")).following.usernames;
-                for(User user : userList.users){
-                    if(following.contains(user.username)){
-                        user.following = new Following(); // I'm following this user
-                    } else {
-                        user.following = null; // I'm not following this user
+                // first, check if current user is logged in
+                if (!(session.getAttribute("username") == null || 
+                        ((String) session.getAttribute("username")).isEmpty())){
+
+                    List<String> following = userFile.getUserByUsername((String) session.getAttribute("username")).following.usernames;
+                    for (User user : userList.users) {
+                        if (following.contains(user.username)) {
+                            user.following = new Following(); // I'm following this user
+                        } else {
+                            user.following = null; // I'm not following this user
+                        }
                     }
                 }
-                
+
                 sendUserList(userList, response.getOutputStream(), mngXML);
 
                 break;
             }
-            
+
             case "delete": {
-                if(! ((boolean) session.getAttribute("isAdmin")) ){
+                if (!((boolean) session.getAttribute("isAdmin"))) {
                     return; // Hacking attempt!!
                 }
-                
+
                 Element recvRoot = data.getDocumentElement();
                 String usernameToDelete = recvRoot.getElementsByTagName("username").item(0).getTextContent();
-                
+
                 UserListFile userFile = UserListFile.getInstance();
                 userFile.deleteUser(usernameToDelete);
-                
+
                 break;
             }
-        
+
             case "toggleFollow": {
                 Element recvRoot = data.getDocumentElement();
                 String followingUsername = recvRoot.getElementsByTagName("username").item(0).getTextContent();
                 UserListFile userFile = UserListFile.getInstance();
-                userFile.toggleFollowing( (String)session.getAttribute("username"), followingUsername);
+                userFile.toggleFollowing((String) session.getAttribute("username"), followingUsername);
                 break;
             }
         }
@@ -97,5 +104,5 @@ public class UserListService extends AbstractXmlServiceServlet {
         mngXML.transform(os, doc);
         os.close();
     }
-    
+
 }
