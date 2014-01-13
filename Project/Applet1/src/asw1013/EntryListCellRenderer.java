@@ -29,12 +29,14 @@ import javax.swing.border.LineBorder;
  */
 final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
 
+    // ui
     private static final int LIST_CELL_ICON_SIZE = 36;
-
     private JLabel userLabel = null;
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
+    
+    // url to retrieve user pic
     private URL base = null;
 
     EntryListCellRenderer(URL documentBase) {
@@ -113,6 +115,7 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
         messageLabel.setText(user);
         timeLabel.setText(time);
 
+        // set image, if any
         try {
             String path = new URL(base, "pic").toString()+"?username="+user;
             imageLabel.setIcon(getImageIcon(path, imageLabel.getSize()));
@@ -138,6 +141,7 @@ final class EntryListCellRenderer extends JPanel implements ListCellRenderer {
         }
     }
 
+    // utility method to get image icon of user pic
     private Icon getImageIcon(String path, Dimension size) throws Exception {
         if (path != null) {
             Image image = ImageCache.getInstance().getImage(

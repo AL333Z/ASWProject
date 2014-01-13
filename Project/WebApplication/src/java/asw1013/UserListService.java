@@ -5,7 +5,6 @@ import asw1013.entity.User;
 import asw1013.util.UserListFile;
 import asw1013.entity.UserList;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;

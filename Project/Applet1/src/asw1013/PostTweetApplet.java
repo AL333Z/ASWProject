@@ -14,7 +14,10 @@ import org.w3c.dom.Element;
 
 public class PostTweetApplet extends JApplet {
 
+    // http client
     HTTPClient hc = new HTTPClient();
+    
+    // xml util
     ManageXML mngXML;
 
     public void init() {
@@ -54,8 +57,7 @@ public class PostTweetApplet extends JApplet {
                     });
                 }
             });
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     private class PostTweetWorker extends SwingWorker<Void, Void> {
@@ -73,13 +75,12 @@ public class PostTweetApplet extends JApplet {
         protected Void doInBackground() throws Exception {
             // prepare the request xml
             Document data = mngXML.newDocument();
-            Element rootReq = data.createElement("tweetsrequest");
-            Element op = data.createElement("operation");
-            op.appendChild(data.createTextNode("postTweet"));
-            rootReq.appendChild(op);
+            Element rootReq = data.createElement("postTweet");
+            
             Element tweetText = data.createElement("tweetText");
             tweetText.appendChild(data.createTextNode(field.getText()));
             rootReq.appendChild(tweetText);
+            
             data.appendChild(rootReq);
 
             Document answer = hc.execute("tweets", data);
