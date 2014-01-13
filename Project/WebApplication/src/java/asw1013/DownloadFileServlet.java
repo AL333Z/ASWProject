@@ -41,6 +41,7 @@ public class DownloadFileServlet extends HttpServlet {
             throw new ServletException("File Name can't be null or empty");
         }
 
+        // get path to images
         File file = new File(getServletContext().getRealPath("/WEB-INF/profilepics/"+fileName));
         if (!file.exists()) {
             throw new ServletException("File doesn't exists on server.");
@@ -53,6 +54,7 @@ public class DownloadFileServlet extends HttpServlet {
         response.setContentLength((int) file.length());
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
+        // write the img to response
         ServletOutputStream os = response.getOutputStream();
         byte[] bufferData = new byte[1024];
         int read = 0;

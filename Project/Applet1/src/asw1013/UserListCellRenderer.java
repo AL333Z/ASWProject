@@ -32,10 +32,13 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
 
     private static final int LIST_CELL_ICON_SIZE = 36;
 
+    // ui
     private JLabel userLabel = null;
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
+    
+    // base url, to retrieve pics
     private URL base = null;
     
     UserListCellRenderer(URL documentBase) {
@@ -88,7 +91,6 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
     public JComponent getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
 
-        //TODO get actual object
         String user = null;
         String message = null;
         String time = null;
@@ -116,6 +118,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         messageLabel.setText(message);
         timeLabel.setText(time);
         
+        // get user picture, if any
         try {
             String path = new URL(base, "pic").toString()+"?username="+user;
             imageLabel.setIcon(getImageIcon(path, imageLabel.getSize()));
@@ -127,6 +130,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
             adjustColors(list.getSelectionBackground(),
                     list.getSelectionForeground(), this, messageLabel, userLabel);
         } else {
+            // followed user are highlighted
             if(!following) {
                 adjustColors(list.getBackground(),
                         list.getForeground(), this, messageLabel, userLabel);
@@ -146,6 +150,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         }
     }
 
+    // utility to get picture icon
     private Icon getImageIcon(String path, Dimension size) throws Exception {
         if (path != null) {
             Image image = ImageCache.getInstance().getImage(

@@ -1,6 +1,5 @@
 package asw1013;
 
-import asw1013.entity.User;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -17,12 +16,19 @@ import org.w3c.dom.*;
  */
 public class TweetListApplet extends JApplet {
 
+    // http client
     HTTPClient hc = new HTTPClient();
-    ManageXML mngXML = null;
     
+    // xml utility
+    ManageXML mngXML = null;
+
+    // logged user flag
     boolean logged = false;
+    
+    // username of the desired user profile
     String username = null;
     
+    // list model
     DefaultListModel<String[]> model;
     
     public void init() {
@@ -48,6 +54,7 @@ public class TweetListApplet extends JApplet {
                     JScrollPane scrollPane = new JScrollPane(jlist);
                     cp.add(scrollPane);
 
+                    // add mouse listener to delete tweets on double click
                     jlist.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent evt) {
@@ -62,12 +69,12 @@ public class TweetListApplet extends JApplet {
                 }
             });
 
+            // start worker to get initial value and to get notified when 
+            // new tweets are availlable
             new TweetDownloadWorker().execute();
             new CometUpdaterThread().start();
 
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
     }
     
     
@@ -75,20 +82,15 @@ public class TweetListApplet extends JApplet {
 
         // prepare the request xml
         Document data = mngXML.newDocument();
-        Element rootReq = data.createElement("tweetsrequest");
-        Element op = data.createElement("operation");
-        op.appendChild(data.createTextNode("getTweets"));
-        rootReq.appendChild(op);
+        Element rootReq = data.createElement("getTweets");
+
         String tweetsOfUsername = getParameter("tweetsOfUsername");
         if(tweetsOfUsername != null){
             Element tweetsOfElem = data.createElement("tweetsOfUsername");
             tweetsOfElem.appendChild(data.createTextNode(tweetsOfUsername));
             rootReq.appendChild(tweetsOfElem);
         }
-        // TODO implement pagination
-        //Element startTweetElem = data.createElement("startTweet");
-        //startTweetElem.appendChild(data.createTextNode(lastDownloadedTweet + ""));
-        //rootReq.appendChild(startTweetElem);
+
         data.appendChild(rootReq);
         
         //showDocument(data);
@@ -101,7 +103,6 @@ public class TweetListApplet extends JApplet {
         return tweetsList;
     }
 
-    
     private class CometUpdaterThread extends Thread {
         @Override
         public void run() {
@@ -109,16 +110,13 @@ public class TweetListApplet extends JApplet {
                 try {
                     // prepare the request xml
                     Document data = mngXML.newDocument();
-                    Element rootReq = data.createElement("tweetsrequest");
-                    Element op = data.createElement("operation");
-                    op.appendChild(data.createTextNode("waitForUpdate"));
-                    rootReq.appendChild(op);
+                    Element rootReq = data.createElement("waitForUpdate");
                     data.appendChild(rootReq);
                     
                     Document answer = hc.execute("tweets", data);
                     
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
+                
                 // I need to trigger a tweet refresh
                 new TweetDownloadWorker().execute();
             }
@@ -171,16 +169,16 @@ public class TweetListApplet extends JApplet {
         protected Void doInBackground() throws Exception {
 
             Document data = mngXML.newDocument();
-            Element rootReq = data.createElement("tweetsrequest");
-            Element op = data.createElement("operation");
-            op.appendChild(data.createTextNode("deleteTweet"));
-            rootReq.appendChild(op);
+            Element rootReq = data.createElement("deleteTweet");
+
             Element usernameElem = data.createElement("username");
             usernameElem.appendChild(data.createTextNode(username));
             rootReq.appendChild(usernameElem);
+            
             Element msgElem = data.createElement("message");
             msgElem.appendChild(data.createTextNode(message));
             rootReq.appendChild(msgElem);
+            
             data.appendChild(rootReq);
             
             Document answer = hc.execute("tweets", data);
@@ -204,7 +202,7 @@ public class TweetListApplet extends JApplet {
         double dayDiff = Math.floor(diff / 86400);
 
         if (diff < 0) {
-            return "in the future?";
+            return "now";
         } else if (diff < 60) {
             return "seconds ago";
         } else if (diff < 120) {

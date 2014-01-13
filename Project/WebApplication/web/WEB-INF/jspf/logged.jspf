@@ -2,4 +2,4 @@
 <%@ page pageEncoding="UTF-8" %>
 
 <li><a href="profile.jsp"><%= session.getAttribute("username")%></a></li>
-<li><a href="logout.jsp">Logout</a></li>
+<li><a href="LogoutServlet">Logout</a></li>

@@ -21,19 +21,23 @@ import org.w3c.dom.*;
  */
 public class UserSearchApplet extends JApplet {
 
+    // http client to manage request
     HTTPClient hc = new HTTPClient();
+    
+    // xml utility
     ManageXML mngXML;
 
+    // ui
     DefaultListModel<User> model = new DefaultListModel<User>();
     final JList jlist = new JList(model);
     final JTextField field = new JTextField();
-
     JButton deleteBtn;
     JButton profileBtn;
 
     public void init() {
 
         try {
+            // set param to http client
             hc.setSessionId(getParameter("sessionId"));
             hc.setBase(getDocumentBase());
             mngXML = new ManageXML();
@@ -45,14 +49,11 @@ public class UserSearchApplet extends JApplet {
                 }
             });
 
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
     }
 
     public void start() {
-        // delete button is only for admin users
-
+        // enable delete button is only for admin users
         if (getParameter("isAdmin") != null && getParameter("isAdmin").equals("Y")) {
             deleteBtn.setVisible(true);
         } else {
@@ -68,6 +69,7 @@ public class UserSearchApplet extends JApplet {
 
         final JButton searchBtn = new JButton("Search");
 
+        // button to delete users
         deleteBtn = new JButton("Delete selected user");
         deleteBtn.addActionListener(new ActionListener() {
             @Override
@@ -80,11 +82,12 @@ public class UserSearchApplet extends JApplet {
             }
         });
 
+        // button to show selected user
         profileBtn = new JButton("Show selected user");
         profileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // delete selected user
+                // selected user
                 int indexToShow = jlist.getSelectedIndex();
                 if (indexToShow >= 0) {
                     
@@ -129,6 +132,7 @@ public class UserSearchApplet extends JApplet {
         scrollPane.setBounds(20, 80, 800, 400);
         cp.add(scrollPane);
 
+        // add mouse listener to follow/unfollow users
         jlist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -142,6 +146,7 @@ public class UserSearchApplet extends JApplet {
         });
     }
 
+    // get users
     private NodeList getUsers(String st) throws Exception {
 
         mngXML = new ManageXML();
@@ -187,7 +192,6 @@ public class UserSearchApplet extends JApplet {
             for (int i = 0; i < usersList.getLength(); i++) {
                 Element userElem = (Element) usersList.item(i);
 
-                //TODO perform unmarshaling in a more elegant way
                 User usr = new User();
                 usr.username = userElem.getElementsByTagName("username").item(0).getTextContent();
                 usr.email = userElem.getElementsByTagName("email").item(0).getTextContent();
