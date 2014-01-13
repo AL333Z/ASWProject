@@ -6,9 +6,13 @@ import asw1013.entity.TweetList;
 import asw1013.util.UserListFile;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
 import javax.servlet.AsyncListener;
@@ -18,7 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Service from which a client can get a list of tweets
@@ -32,7 +38,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
     @Override
     protected void operations(Document data, HttpSession session, 
             HttpServletRequest request, HttpServletResponse response, 
-            ManageXML mngXML) throws Exception {
+            final ManageXML mngXML) throws Exception {
         
         String operation = data.getElementsByTagName("operation").item(0).getTextContent();
         
@@ -92,10 +98,17 @@ public class TweetListService extends AbstractXmlServiceServlet{
             // Notify the event to listeners
             synchronized (this) {
                 for (AsyncContext asyncContext : contexts) {
-                    OutputStream aos = asyncContext.getResponse().getOutputStream();
-                    // don't send anything to the client
-                    aos.close();
-                    asyncContext.complete();
+                    try {
+                        OutputStream tos = asyncContext.getResponse().getOutputStream();
+                        Document doc = mngXML.newDocument();
+                        Element child = doc.createElement("bubusettete");
+                        doc.appendChild(child);
+                        mngXML.transform(tos, doc);
+                        tos.close();
+                        asyncContext.complete();
+                    } catch (TransformerException ex) {
+                        Logger.getLogger(TweetListService.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 contexts.clear();
             }
@@ -121,10 +134,17 @@ public class TweetListService extends AbstractXmlServiceServlet{
                 // Notify the event to listeners
                 synchronized (this) {
                     for (AsyncContext asyncContext : contexts) {
-                        OutputStream aos = asyncContext.getResponse().getOutputStream();
-                        // don't send anything to the client
-                        aos.close();
-                        asyncContext.complete();
+                        try {
+                            OutputStream tos = asyncContext.getResponse().getOutputStream();
+                            Document doc = mngXML.newDocument();
+                            Element child = doc.createElement("bubusettete");
+                            doc.appendChild(child);
+                            mngXML.transform(tos, doc);
+                            tos.close();
+                            asyncContext.complete();
+                        } catch (TransformerException ex) {
+                            Logger.getLogger(TweetListService.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                     contexts.clear();
                 }
@@ -151,10 +171,17 @@ public class TweetListService extends AbstractXmlServiceServlet{
                         }
                     }
                     if (confirm) {
-                        OutputStream tos = asyncContext.getResponse().getOutputStream();
-                        // don't send anything to the client
-                        tos.close();
-                        asyncContext.complete();
+                        try {
+                            OutputStream tos = asyncContext.getResponse().getOutputStream();
+                            Document doc = mngXML.newDocument();
+                            Element child = doc.createElement("bubusettete");
+                            doc.appendChild(child);
+                            mngXML.transform(tos, doc);
+                            tos.close();
+                            asyncContext.complete();
+                        } catch (TransformerException ex) {
+                            Logger.getLogger(TweetListService.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
 
