@@ -1,5 +1,5 @@
-ASWProject
-==========
+Applicazione e servizi web - Unibo - 2013-2014
+==============================================
 
 TODO
 ----
