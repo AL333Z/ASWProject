@@ -15,7 +15,7 @@ import org.w3c.dom.*;
  *
  * @author al333z
  */
-public class ListApplet extends JApplet {
+public class TweetListApplet extends JApplet {
 
     HTTPClient hc = new HTTPClient();
     ManageXML mngXML = null;

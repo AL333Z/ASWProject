@@ -16,7 +16,7 @@
         
         <div class="container">
             <p>Tweets posted by <%= session.getAttribute("username") %></p>
-            <APPLET codebase="applet/" code="asw1013.ListApplet" 
+            <APPLET codebase="applet/" code="asw1013.TweetListApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">
