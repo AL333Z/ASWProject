@@ -41,12 +41,10 @@ public class DownloadFileServlet extends HttpServlet {
             throw new ServletException("File Name can't be null or empty");
         }
 
-        File file = new File("profilepics" + File.separator + fileName);
+        File file = new File(getServletContext().getRealPath("/WEB-INF/profilepics/"+fileName));
         if (!file.exists()) {
             throw new ServletException("File doesn't exists on server.");
         }
-
-        System.out.println("File location on server::" + file.getAbsolutePath());
 
         ServletContext ctx = getServletContext();
         InputStream fis = new FileInputStream(file);
@@ -64,8 +62,7 @@ public class DownloadFileServlet extends HttpServlet {
         os.flush();
         os.close();
         fis.close();
-        
-        System.out.println("File downloaded at client successfully");
+       
     }
 
 }

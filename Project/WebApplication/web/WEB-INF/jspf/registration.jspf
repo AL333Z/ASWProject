@@ -23,11 +23,3 @@
         </p>
     </form>
 </div>
-
-<%
-    // Dirty hack to make sure the profile pictures directory exists
-    File dir = new File("profilepics");
-    if(!dir.exists()){
-        dir.mkdir();
-    }
-%>
