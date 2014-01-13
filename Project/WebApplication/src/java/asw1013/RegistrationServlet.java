@@ -46,7 +46,7 @@ public class RegistrationServlet extends HttpServlet {
             user.pass = request.getParameter("passwordsignup");
             user.username = request.getParameter("usernamesignup");
 
-            UserListFile ulf = UserListFile.getInstance();
+            UserListFile ulf = UserListFile.getInstance(getServletContext());
             ulf.registerUser(user);
 
             // setting user as logged in

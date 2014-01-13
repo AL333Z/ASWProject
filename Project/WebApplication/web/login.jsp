@@ -6,7 +6,7 @@
     user.pass = request.getParameter("password");
     user.username = request.getParameter("username");
 
-    UserListFile ulf = UserListFile.getInstance();
+    UserListFile ulf = UserListFile.getInstance(getServletContext());
     user = ulf.loginUser(user);
     
     // setting user as logged in

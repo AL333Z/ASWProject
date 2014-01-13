@@ -38,7 +38,7 @@ public class UserListService extends AbstractXmlServiceServlet {
                 Element recvRoot = data.getDocumentElement();
                 String searchTerm = recvRoot.getElementsByTagName("searchTerm").item(0).getTextContent();
 
-                UserListFile userFile = UserListFile.getInstance();
+                UserListFile userFile = UserListFile.getInstance(getServletContext());
                 UserList userList = null;
 
                 if (searchTerm == null || searchTerm.isEmpty()) {
@@ -77,7 +77,7 @@ public class UserListService extends AbstractXmlServiceServlet {
                 Element recvRoot = data.getDocumentElement();
                 String usernameToDelete = recvRoot.getElementsByTagName("username").item(0).getTextContent();
 
-                UserListFile userFile = UserListFile.getInstance();
+                UserListFile userFile = UserListFile.getInstance(getServletContext());
                 userFile.deleteUser(usernameToDelete);
 
                 break;
@@ -86,7 +86,7 @@ public class UserListService extends AbstractXmlServiceServlet {
             case "toggleFollow": {
                 Element recvRoot = data.getDocumentElement();
                 String followingUsername = recvRoot.getElementsByTagName("username").item(0).getTextContent();
-                UserListFile userFile = UserListFile.getInstance();
+                UserListFile userFile = UserListFile.getInstance(getServletContext());
                 userFile.toggleFollowing((String) session.getAttribute("username"), followingUsername);
                 break;
             }

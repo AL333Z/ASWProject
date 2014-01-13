@@ -40,7 +40,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
             
             // TODO get from XML the start and stop numbers of tweets to sent (pagination)
             
-            TweetListFile tweetFile = TweetListFile.getInstance();
+            TweetListFile tweetFile = TweetListFile.getInstance(getServletContext());
             TweetList tweetList = tweetFile.readFile();
 
             TweetList tweetListToSend;
@@ -50,7 +50,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
                 tweetListToSend = tweetList;
             } else if(data.getElementsByTagName("tweetsOfUsername").getLength()==0){
                 // Return tweets of users I'm following
-                UserListFile ufile = UserListFile.getInstance();
+                UserListFile ufile = UserListFile.getInstance(getServletContext());
                 List<String> followingUsernames = ufile.getUserByUsername(myUsername).following.usernames;
                 tweetListToSend = new TweetList();
                 for(Tweet tweet : tweetList.tweets){
@@ -86,7 +86,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
             tweet.date = new Date();
             tweet.username = (String) session.getAttribute("username");
             
-            TweetListFile tweetFile = TweetListFile.getInstance();
+            TweetListFile tweetFile = TweetListFile.getInstance(getServletContext());
             tweetFile.addTweet(tweet);
             
             // Notify the event to listeners
@@ -108,7 +108,7 @@ public class TweetListService extends AbstractXmlServiceServlet{
             if( (boolean) session.getAttribute("isAdmin") ){
                 String username = data.getElementsByTagName("username").item(0).getTextContent();
                 String message = data.getElementsByTagName("message").item(0).getTextContent();
-                TweetListFile tweetFile = TweetListFile.getInstance();
+                TweetListFile tweetFile = TweetListFile.getInstance(getServletContext());
                 TweetList tweetList = tweetFile.readFile();
                 TweetList newTweetList = new TweetList();
                 for(Tweet tweet : tweetList.tweets){

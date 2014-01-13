@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -22,34 +23,35 @@ import org.w3c.dom.Document;
  */
 public class TweetListFile {
     
-    public static final File TWEET_FILE = new File("tweets.xml");
     
     private volatile static TweetListFile instance = null;
     
+    private final File tweetFile;
     private JAXBContext context;
     private ManageXML mngXML;
     
-    public static TweetListFile getInstance() throws Exception {
+    public static TweetListFile getInstance(ServletContext servletContext) throws Exception {
         if(instance == null){
             synchronized(TweetListFile.class){
                 if(instance == null){
-                    instance = new TweetListFile();
+                    instance = new TweetListFile(servletContext);
                 }
             }
         }
         return instance;
     }
     
-    private TweetListFile() throws Exception {
+    private TweetListFile(ServletContext servletContext) throws Exception {
         context = JAXBContext.newInstance(TweetList.class);
         mngXML = new ManageXML();
+        tweetFile = new File(servletContext.getRealPath("/WEB-INF/tweets.xml")); // this only works with default config of tomcat
     }
     
     public synchronized TweetList readFile() throws Exception{
-        if(!TWEET_FILE.exists()){
+        if(!tweetFile.exists()){
             createFile();
         }
-        InputStream in = new FileInputStream(TWEET_FILE);
+        InputStream in = new FileInputStream(tweetFile);
         Document tweetsDoc = mngXML.parse(in);
         Unmarshaller u = context.createUnmarshaller();
         TweetList tweets = (TweetList) u.unmarshal(tweetsDoc);
@@ -60,7 +62,7 @@ public class TweetListFile {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
         marsh.marshal(tweetList, doc);
-        OutputStream out = new FileOutputStream(TWEET_FILE);
+        OutputStream out = new FileOutputStream(tweetFile);
         mngXML.transform(out, doc);
         out.close();
     }

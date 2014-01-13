@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -34,34 +35,34 @@ import org.w3c.dom.Document;
  */
 public class UserListFile {
 
-    public static final File USER_FILE = new File("users.xml");
-
     private volatile static UserListFile instance = null;
 
+    private final File userFile;
     private JAXBContext context;
     private ManageXML mngXML;
 
-    public static UserListFile getInstance() throws Exception {
+    public static UserListFile getInstance(ServletContext servletContext) throws Exception {
         if(instance == null){
             synchronized(UserListFile.class){
                 if(instance == null){
-                    instance = new UserListFile();
+                    instance = new UserListFile(servletContext);
                 }
             }
         }
         return instance;
     }
 
-    private UserListFile() throws Exception {
+    private UserListFile(ServletContext servletContext) throws Exception {
         context = JAXBContext.newInstance(UserList.class);
         mngXML = new ManageXML();
+        userFile = new File(servletContext.getRealPath("/WEB-INF/users.xml")); // this only works with default config of tomcat
     }
 
     public synchronized UserList readFile() throws Exception {
-        if (!USER_FILE.exists()) {
+        if (!userFile.exists()) {
             createFile();
         }
-        InputStream in = new FileInputStream(USER_FILE);
+        InputStream in = new FileInputStream(userFile);
         Document tweetsDoc = mngXML.parse(in);
         Unmarshaller u = context.createUnmarshaller();
         UserList users = (UserList) u.unmarshal(tweetsDoc);
@@ -141,7 +142,7 @@ public class UserListFile {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
         marsh.marshal(userList, doc);
-        OutputStream out = new FileOutputStream(USER_FILE);
+        OutputStream out = new FileOutputStream(userFile);
         mngXML.transform(out, doc);
         out.close();
     }
