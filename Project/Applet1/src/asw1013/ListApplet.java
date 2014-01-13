@@ -1,5 +1,6 @@
 package asw1013;
 
+import asw1013.entity.User;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -45,7 +46,19 @@ public class ListApplet extends JApplet {
                     JList jlist = new JList(model);
                     jlist.setCellRenderer(new EntryListCellRenderer(getDocumentBase()));
                     JScrollPane scrollPane = new JScrollPane(jlist);
-                    cp.add(scrollPane);                    
+                    cp.add(scrollPane);
+
+                    jlist.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent evt) {
+                            JList list = (JList) evt.getSource();
+                            if (evt.getClickCount() == 2) { // User has double-clicked
+                                int index = list.locationToIndex(evt.getPoint());
+                                String[] row = (String[]) model.getElementAt(index);
+                                new TweetDeleteWorker(row[0], row[1]).execute();
+                            }
+                        }
+                    });
                 }
             });
 
@@ -144,6 +157,44 @@ public class ListApplet extends JApplet {
         }
     }
     
+    private class TweetDeleteWorker extends SwingWorker<Void, Void> {
+        
+        private String username;
+        private String message;
+        
+        public TweetDeleteWorker(String username, String message){
+            this.username = username;
+            this.message = message;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+
+            Document data = mngXML.newDocument();
+            Element rootReq = data.createElement("tweetsrequest");
+            Element op = data.createElement("operation");
+            op.appendChild(data.createTextNode("deleteTweet"));
+            rootReq.appendChild(op);
+            Element usernameElem = data.createElement("username");
+            usernameElem.appendChild(data.createTextNode(username));
+            rootReq.appendChild(usernameElem);
+            Element msgElem = data.createElement("message");
+            msgElem.appendChild(data.createTextNode(message));
+            rootReq.appendChild(msgElem);
+            data.appendChild(rootReq);
+            
+            Document answer = hc.execute("tweets", data);
+
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            new TweetDownloadWorker().execute();
+        }
+
+    }
+    
 
     
     private static String buildDateString(String xmlDate){
@@ -159,15 +210,15 @@ public class ListApplet extends JApplet {
         } else if (diff < 120) {
             return "1 minute ago";
         } else if (diff < 3600) {
-            return diff / 60 + " minutes ago";
+            return ((int)(diff / 60)) + " minutes ago";
         } else if (diff < 7200) {
             return "one hour ago";
         } else if (diff < 86400) {
-            return diff / 3600 + " hours ago";
+            return ((int)(diff / 3600)) + " hours ago";
         } else if (dayDiff == 1) {
             return "yesterday";
         } else if (dayDiff < 7) {
-            return dayDiff + " days ago";
+            return ((int)dayDiff) + " days ago";
         } else {
             return Math.ceil(dayDiff / 7) + " weeks ago";
         }

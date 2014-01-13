@@ -103,6 +103,35 @@ public class TweetListService extends AbstractXmlServiceServlet{
             // Close the output stream of this connection
             response.getOutputStream().close();
             
+        } else if(operation.equals("deleteTweet")){
+            
+            if( (boolean) session.getAttribute("isAdmin") ){
+                String username = data.getElementsByTagName("username").item(0).getTextContent();
+                String message = data.getElementsByTagName("message").item(0).getTextContent();
+                TweetListFile tweetFile = TweetListFile.getInstance();
+                TweetList tweetList = tweetFile.readFile();
+                TweetList newTweetList = new TweetList();
+                for(Tweet tweet : tweetList.tweets){
+                    if( !(tweet.username.equals(username) && tweet.message.equals(message)) ){
+                        newTweetList.tweets.add(tweet);
+                    }
+                }
+                tweetFile.writeFile(newTweetList);
+
+                // Notify the event to listeners
+                synchronized (this) {
+                    for (AsyncContext asyncContext : contexts) {
+                        OutputStream aos = asyncContext.getResponse().getOutputStream();
+                        // don't send anything to the client
+                        aos.close();
+                        asyncContext.complete();
+                    }
+                    contexts.clear();
+                }
+            }
+
+            response.getOutputStream().close();
+
         } else if(operation.equals("waitForUpdate")) {
             
             // This will stop the transmission of the HTTP response until a timeout occurs
