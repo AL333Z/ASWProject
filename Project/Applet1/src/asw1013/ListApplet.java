@@ -2,16 +2,12 @@ package asw1013;
 
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.io.StringWriter;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 
 /**
@@ -26,7 +22,7 @@ public class ListApplet extends JApplet {
     boolean logged = false;
     String username = null;
     
-    DefaultListModel model;
+    DefaultListModel<String[]> model;
     
     public void init() {
         
@@ -45,14 +41,14 @@ public class ListApplet extends JApplet {
                     Container cp = getContentPane();
                     cp.setLayout(new GridLayout(1, 1));
 
-                    model = new DefaultListModel<Object[]>();
+                    model = new DefaultListModel<String[]>();
                     JList jlist = new JList(model);
                     jlist.setCellRenderer(new EntryListCellRenderer(getDocumentBase()));
                     JScrollPane scrollPane = new JScrollPane(jlist);
-                    cp.add(scrollPane);
+                    cp.add(scrollPane);                    
                 }
             });
-            
+
             new TweetDownloadWorker().execute();
             new CometUpdaterThread().start();
 
@@ -136,7 +132,7 @@ public class ListApplet extends JApplet {
             for (int i = tweetsList.getLength()-1; i>=0; i--) {
                 Element tweetElem = (Element) tweetsList.item(i);
                 
-                Object[] listElem = {
+                String[] listElem = {
                     tweetElem.getElementsByTagName("username").item(0).getTextContent(),
                     tweetElem.getElementsByTagName("message").item(0).getTextContent(),
                     buildDateString(tweetElem.getElementsByTagName("date").item(0).getTextContent()),
@@ -148,28 +144,7 @@ public class ListApplet extends JApplet {
         }
     }
     
-    
-    private void showDocument(Document doc) {
-        try {
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(doc), new StreamResult(writer));
-            final String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    Object[] boh = {"xmldebug",
-                            output,
-                            "adesso",
-                            ""
-                            };
-                    model.addElement(boh);
-                }
-            });
-        } catch (Exception e) {}
-    }
+
     
     private static String buildDateString(String xmlDate){
         Calendar tweetCal = DatatypeConverter.parseDateTime(xmlDate);
