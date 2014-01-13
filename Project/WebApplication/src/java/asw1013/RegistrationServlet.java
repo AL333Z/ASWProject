@@ -58,6 +58,8 @@ public class RegistrationServlet extends HttpServlet {
 
             // save the pic with username
             part.write(user.username);
+            File pic = new File("/tmp/"+user.username);
+            pic.renameTo(new File("profilepics/"+user.username));
 
             // redirecting to main page
             String site = new String("index.jsp");

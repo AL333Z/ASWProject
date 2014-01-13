@@ -1,4 +1,5 @@
 <%-- any content can be specified here e.g.: --%>
+<%@page import="java.io.File"%>
 <%@ page pageEncoding="UTF-8" %>
 <div id="register" class="form">
     <form method="POST" action="RegistrationServlet" autocomplete="on" enctype="multipart/form-data"> 
@@ -22,3 +23,11 @@
         </p>
     </form>
 </div>
+
+<%
+    // Dirty hack to make sure the profile pictures directory exists
+    File dir = new File("profilepics");
+    if(!dir.exists()){
+        dir.mkdir();
+    }
+%>

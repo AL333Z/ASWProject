@@ -41,7 +41,7 @@ public class DownloadFileServlet extends HttpServlet {
             throw new ServletException("File Name can't be null or empty");
         }
 
-        File file = new File("/tmp" + File.separator + fileName);
+        File file = new File("profilepics" + File.separator + fileName);
         if (!file.exists()) {
             throw new ServletException("File doesn't exists on server.");
         }
