@@ -1,8 +1,5 @@
 package asw1013.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * An user of the website
  */

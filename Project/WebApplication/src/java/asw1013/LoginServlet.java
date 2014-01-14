@@ -14,8 +14,7 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 /**
- *
- * @author al333z
+ * Servlet that login or logout the user, based on the url pattern matched
  */
 @WebServlet(urlPatterns = { "/LoginServlet", "/LogoutServlet"})
 public class LoginServlet extends HttpServlet {

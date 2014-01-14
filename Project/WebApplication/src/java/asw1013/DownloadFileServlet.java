@@ -15,10 +15,6 @@
  */
 package asw1013;
 
-/**
- *
- * @author al333z
- */
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,6 +28,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Servlet that given a username as parameter, returns the profile image
+ */
 @WebServlet("/pic")
 public class DownloadFileServlet extends HttpServlet {
 

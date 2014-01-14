@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author mattia
+ * Following relationship between users
  */
 public class Following {
     

@@ -30,8 +30,10 @@ import javax.xml.bind.Unmarshaller;
 import org.w3c.dom.Document;
 
 /**
+ * Utility class to read and write data from the XML file of users.
  *
- * @author al333z
+ * This class is a singleton (only one instance per JVM is allowed) to solve
+ * concurrency problems.
  */
 public class UserListFile {
 
@@ -41,10 +43,17 @@ public class UserListFile {
     private JAXBContext context;
     private ManageXML mngXML;
 
+    /**
+     * Return a singleton object of UserListFile
+     *
+     * @param servletContext
+     * @return
+     * @throws Exception
+     */
     public static UserListFile getInstance(ServletContext servletContext) throws Exception {
-        if(instance == null){
-            synchronized(UserListFile.class){
-                if(instance == null){
+        if (instance == null) {
+            synchronized (UserListFile.class) {
+                if (instance == null) {
                     instance = new UserListFile(servletContext);
                 }
             }
@@ -58,6 +67,11 @@ public class UserListFile {
         userFile = new File(servletContext.getRealPath("/WEB-INF/users.xml")); // this only works with default config of tomcat
     }
 
+    /**
+     * Read the xml db
+     * @return the list of users
+     * @throws Exception 
+     */
     public synchronized UserList readFile() throws Exception {
         if (!userFile.exists()) {
             createFile();
@@ -69,6 +83,11 @@ public class UserListFile {
         return users;
     }
 
+    /**
+     * Register a new user, adding a new entry in the xml db
+     * @param user
+     * @throws Exception 
+     */
     public synchronized void registerUser(User user) throws Exception {
         UserList ul = readFile();
         if (!isUserRegistered(user, ul)) {
@@ -80,10 +99,15 @@ public class UserListFile {
         }
     }
 
+    /**
+     * Delete a user, removing its entry from the xml db
+     * @param username
+     * @throws Exception 
+     */
     public synchronized void deleteUser(String username) throws Exception {
         UserList ul = readFile();
 
-        for(User usr : ul.users){
+        for (User usr : ul.users) {
             usr.following.usernames.remove(username);
         }
         for (User usr : ul.users) {
@@ -96,6 +120,12 @@ public class UserListFile {
         throw new Exception("User does not exist.");
     }
 
+    /**
+     * Search a user in the xml db
+     * @param str the string to match
+     * @return the list of users that match str
+     * @throws Exception 
+     */
     public synchronized UserList searchUsers(String str) throws Exception {
         UserList ul = readFile();
         UserList returnList = new UserList();
@@ -107,11 +137,17 @@ public class UserListFile {
         return returnList;
     }
 
+    /**
+     * Add/remove the following relationship beetween two users
+     * @param followerUsername the follower username
+     * @param followingUsername the followed username
+     * @throws Exception 
+     */
     public synchronized void toggleFollowing(String followerUsername, String followingUsername) throws Exception {
         UserList ul = readFile();
-        for(User usr : ul.users){
-            if(usr.username.equals(followerUsername)){
-                if(usr.following.usernames.contains(followingUsername)){
+        for (User usr : ul.users) {
+            if (usr.username.equals(followerUsername)) {
+                if (usr.following.usernames.contains(followingUsername)) {
                     usr.following.usernames.remove(followingUsername);
                 } else {
                     usr.following.usernames.add(followingUsername);
@@ -122,6 +158,12 @@ public class UserListFile {
         }
     }
 
+    /**
+     * Check user credentials
+     * @param user
+     * @return the user, if credentials are ok
+     * @throws Exception 
+     */
     public synchronized User loginUser(User user) throws Exception {
         User usr = getUserByUsername(user.username);
         if (usr.pass.equals(user.pass)) {
@@ -131,10 +173,15 @@ public class UserListFile {
         }
     }
 
+    /**
+     * @param username
+     * @return user information
+     * @throws Exception 
+     */
     public synchronized User getUserByUsername(String username) throws Exception {
         UserList ul = readFile();
-        for(User usr : ul.users){
-            if(usr.username.equals(username)){
+        for (User usr : ul.users) {
+            if (usr.username.equals(username)) {
                 return usr;
             }
         }

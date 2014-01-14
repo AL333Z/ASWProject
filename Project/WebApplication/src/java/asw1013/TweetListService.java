@@ -25,7 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Service from which a client can get a list of tweets
+ * Service that manage all the operation concerning tweets management
  */
 @WebServlet(urlPatterns = {"/tweets"}, asyncSupported = true)
 public class TweetListService extends AbstractXmlServiceServlet {

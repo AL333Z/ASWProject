@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!--
+Copyright 2014 al333z.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <h1>Applicazione e servizi web - Unibo - 2013-2014</h1>
+
+        <h1>Titolo</h1>
+
+        <p>Share2Me</p>
+
+        <h1>Autori</h1>
+
+        <p>Alessandro Zoffoli - 657273 - alessandro.zoffoli2@studio.unibo.it</p>
+
+        <p>Mattia Baldani - 681182 - mattia.baldani@studio.unibo.it</p>
+
+        <h1>DESCRIZIONE DEL SERVIZIO OFFERTO DAL SITO</h1>
+
+        <p>WebApp social, ispirata a Twitter, che permette ad ogni utente di cercare e seguire altri utenti, e di condividere uno stato (una qualsiasi frase) agli utenti da cui è seguito.</p>
+
+        <h1>UTILIZZO DEL SITO</h1>
+
+        <p>Tipologie di utenti:</p>
+
+        <ol>
+            <li><p>Utenti non registrati</p>
+
+                <ul><li>Registrazione</li>
+                    <li>Ricerca utenti e visualizzazione stati condivisi</li></ul></li>
+            <li><p>Utenti registrati</p>
+
+                <ul><li>Login/Logout</li>
+                    <li>Condivisione stato</li>
+                    <li>Aggiunta/Rimozione di followers</li>
+                    <li>Ricerca utenti e visualizzazione stati condivisi</li></ul></li>
+            <li><p>Utenti amministratori</p>
+
+                <ul><li>Rimozione di utenti e stati non appropriati</li>
+                    <li>Tutto quello previsto per gli utenti registrati</li></ul></li>
+        </ol>
+
+        <h1>REALIZZAZIONE DEL SITO - Sommario</h1>
+
+        <h2>Computazione lato client</h2>
+
+        <p>Consiste in diverse RIA eseguite come applet, incorporate in pagine web. In particolare:</p>
+
+        <ol>
+            <li>PostTweetApplet, che consente di scrivere e publicare un nuovo stato. </li>
+            <li>UserSearchApplet, che consente all'utente di ricercare altri utenti.</li>
+            <li>TweetListApplet, che consente all'utente di visualizzare la lista di stati condivisi dai suoi following o dal singolo utente, a seconda del contesto.</li>
+        </ol>
+
+        <h2>Computazione lato server</h2>
+
+        <p>È compresa nelle seguenti JSP:</p>
+
+        <ol>
+            <li>index.jsp, che è la pagina principale dell'applicazione. Se l'utente è loggato, mostra all'utente gli ultimi stati degli utenti che segue, oltre che a permettere l'aggiunta di un nuovo post. Se l'utente non è loggato, propone i form di registrazione e login, e mostra all'utente gli ultimi post provenienti dalla totalità degli utenti registrati.</li>
+            <li>login.jsp, che verifica le credenziali dell'utente e lo redirige alla pagina principale.</li>
+            <li>logout.jsp, che slogga l'utente e  lo redirige alla pagina principale.</li>
+            <li>profile.jsp, che mostra il profilo (tutti gli stati postati) dell'utente selezionato.</li>
+            <li>search.jsp, che permette all'utente di cercare altri utenti, di aggiungerli ai suoi following e di visualizzarne il profilo.</li>
+        </ol>
+
+        <p>Le servlet utilizzate sono:</p>
+
+        <ol>
+            <li>RegistrationServlet, che provvede alla registrazione di un nuovo utente (che puó anche inserire una foto del profilo).</li>
+            <li>DownloadFileServlet, che provvede a restituire la foto del profilo a partire da uno username.</li>
+            <li>TweetListService (XML over HTTP), che racchiude tutte le operazioni legate alla gestione degli stati condivisi.</li>
+            <li>UserListService (XML over HTTP), che racchiude tutte le operazione legate alla gestione degli utenti.</li>
+        </ol>
+
+        <h2>Informazioni memorizzate sul server e scambiate sulla rete</h2>
+
+        <p>Le informazioni memorizzate sul server sono quelle realtive a:</p>
+
+        <ol>
+            <li>gli utenti registrati (users.xml).</li>
+            <li>gli stati condivisi (tweets.xml).</li>
+        </ol>
+
+        <p>Le informazioni scambiate sono principalmente suddivisibili in:</p>
+
+        <ol>
+            <li>xml presente nelle request, generalmente formato da un nodo radice che contiene il nome dell'operazione richiesta e opzionalmente altri nodi, contenenti parametri da elaborare (es: nella ricerca degli utenti, la stringa con cui filtrare al lista degli utenti, ...).</li>
+            <li>xml presente nelle response, generalmente formato da una lista di elementi (lista di utenti, lista di stati, ...)</li>
+        </ol>
+
+        <h1>REALIZZAZIONE DEL SITO - Tecnologie</h1>
+
+        <h2>Computazione lato client</h2>
+
+        <ol>
+            <li>PostTweetApplet. È una semplice applet che utilizza HTTPClient e ManageXML per postare un nuovo tweet.</li>
+            <li>UserSearchApplet. È una applet piú complessa, formata da un campo di ricerca e un bottone, e una lista. Utilizza HTTPClient e ManageXML per richiedere la lista degli utenti che matchano la stringa inserita, e che vengono riportati nella lista. Tale applet utilizza un ListCellRenderer (UserListCellRenderer) per visualizzare in maniera piú gradevole i dati e una ImageCache per ottimizzare il download e la visualizzazione delle immagini del profilo dei vari utenti.</li>
+            <li><p>TweetListApplet. È una applet che si comporta nel seguente modo:</p>
+
+                <ul><li>Alla prima apertura, gli stati vengono recuperati con una richiesta.</li>
+                    <li>Successivamente la lista viene aggiornata attraverso un comet service, ogni qualvolta viene pubblicato un nuovo stato.</li></ul>
+
+                <p>La scelta di implementare le funzionalità principali come applet deriva principalmente dalla volontà di avere una esperienza utente uniforme nelle varie pagine del sito. 
+                    L'unica funzionalità che realmente richiedeva di essere implementata come applet è TweetListApplet, in quanto comunica col server in modo interattivo.</p></li>
+        </ol>
+
+        <h2>Computazione lato server</h2>
+
+        <ol>
+            <li>index.jsp, che è la pagina principale dell'applicazione. Se l'utente è loggato, mostra all'utente gli ultimi stati degli utenti che segue, oltre che a permettere l'aggiunta di un nuovo post. Se l'utente non è loggato, propone i form di registrazione e login, e mostra all'utente gli ultimi post provenienti dalla totalità degli utenti registrati.</li>
+            <li>login.jsp, viene invocata dalla servlet LoginServlet (MVC) ed esegue il redirect alla pagina principale, che presentera' all'utente la possibilita' di inserire un nuovo post e di visualizzare lo stream di tweet dei suo following.</li>
+            <li>logout.jsp, viene invocata dalla servlet LoginServlet (MVC) ed esegue il redirect alla pagina principale.</li>
+            <li>profile.jsp, prende come parametro uno username, e mostra lo stream dei suoi tweet, incorporando l'applet TweetListApplet, a cui passo lo username come parametro.</li>
+            <li>search.jsp, che incorpora UserSearchApplet, a cui passa come parametri informazione sull'utente loggato (isLoggedIn, isAdmin).</li>
+        </ol>
+
+        <p>Le servlet utilizzate sono:</p>
+
+        <ol>
+            <li><p>RegistrationServlet, che riceve i dati dal form di registrazione (testuali e immagine) e provvede a salvarli (db xml e directory contenente le immagini del profilo degli utenti).</p></li>
+            <li><p>DownloadFileServlet, che prende il nome dello username dai parametri della richiesta e restituisce l'immagine del profilo corrispondente.</p></li>
+            <li><p>LoginServlet, che a seconda dell'url pattern matchato, provvede a loggare o sloggare l'utente dal sito.</p></li>
+            <li><p>TweetListService, che gestisce diversi tipi di operazioni, correlate agli stati:</p>
+
+                <ul><li>getTweets, che ritorna la lista dei tweets da visualizzare</li>
+                    <li>postTweet, che permette l'inserimento</li>
+                    <li>waitForUpdate, che innesca il meccanismo del comet service.</li></ul></li>
+            <li><p>UserListService, che gestisce diversi tipi di operazioni, correlate agli utenti:</p>
+
+                <ul><li>userlist, che ritorna la lista degli utenti da visualizzare</li>
+                    <li>delete, che elimina l'utente passato come parametro</li>
+                    <li>toggleFollow, che aggiunge/rimuove la relazione di following verso un utente.</li></ul></li>
+        </ol>
+
+        <h2>Informazioni memorizzate sul server e scambiate sulla rete</h2>
+
+        <p>Per il dettaglio, si vedano:</p>
+
+        <p>XML Schema dati memorizzati 
+            <a href="xml/users.xsd">Utenti</a>
+            e
+            <a href="xml/tweets.xsd">Tweets</a>
+        </p>
+
+        <p>XML Schema dati scambiati, che dipendono dalle operation 
+            <a href="#">TODO</a>
+        </p>
+
+        <p>Javadoc di 
+            <a href="WebApplication/javadoc/asw1013/util/UserListFile.html">TweetListFile</a>
+            e 
+            <a href="WebApplication/javadoc/asw1013/util/TweetListFile.html">UserListFile</a>
+        </p>
+
+        <h2>Altre librerie</h2>
+
+        <p>Javadoc di <a href="Applet1/javadoc/asw1013/util/ImageCache.html">ImageCache</a></p>
+    </body>
+</html>

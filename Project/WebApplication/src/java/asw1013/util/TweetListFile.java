@@ -30,6 +30,12 @@ public class TweetListFile {
     private JAXBContext context;
     private ManageXML mngXML;
     
+    /**
+     * Singleton method
+     * @param servletContext
+     * @return singleton object of TweetListFile
+     * @throws Exception 
+     */
     public static TweetListFile getInstance(ServletContext servletContext) throws Exception {
         if(instance == null){
             synchronized(TweetListFile.class){
@@ -47,6 +53,11 @@ public class TweetListFile {
         tweetFile = new File(servletContext.getRealPath("/WEB-INF/tweets.xml")); // this only works with default config of tomcat
     }
     
+    /**
+     * Read the xml db
+     * @return the list of tweets
+     * @throws Exception 
+     */
     public synchronized TweetList readFile() throws Exception{
         if(!tweetFile.exists()){
             createFile();
@@ -58,6 +69,11 @@ public class TweetListFile {
         return tweets;
     }
     
+    /**
+     * Save the list in input to xml db
+     * @param tweetList
+     * @throws Exception 
+     */
     public synchronized void writeFile(TweetList tweetList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = mngXML.newDocument();
@@ -67,6 +83,11 @@ public class TweetListFile {
         out.close();
     }
     
+    /**
+     * Add a new tweet to the xml db
+     * @param tweet
+     * @throws Exception 
+     */
     public synchronized void addTweet(Tweet tweet) throws Exception {
         TweetList list = readFile();
         list.tweets.add(tweet);

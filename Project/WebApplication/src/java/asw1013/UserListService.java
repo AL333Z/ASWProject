@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Service from which a client can get a list of users
+ * Service that manage all the operation concerning users management
  */
 @WebServlet(urlPatterns = {"/users"})
 public class UserListService extends AbstractXmlServiceServlet {
