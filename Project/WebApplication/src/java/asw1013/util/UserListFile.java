@@ -83,6 +83,9 @@ public class UserListFile {
     public synchronized void deleteUser(String username) throws Exception {
         UserList ul = readFile();
 
+        for(User usr : ul.users){
+            usr.following.usernames.remove(username);
+        }
         for (User usr : ul.users) {
             if (username.equals(usr.username)) {
                 ul.users.remove(usr);
