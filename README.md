@@ -11,7 +11,7 @@ TODO
 - ~~User stream (WS + applet)~~
 - ~~Users profiles: stats + messages (WS + applet)~~
 - Check xml produced
-- Clean code
+- ~~Clean code~~
 - JavaDoc
 - ~~html documentation page~~ (this README, converted to html)
 
@@ -86,8 +86,8 @@ Le informazioni memorizzate sul server sono quelle realtive a:
 
 Le informazioni scambiate sono principalmente suddivisibili in:
 
-1. xml presente nelle request, generalmente formato da un nodo radice che contiene l'operazione richiesta e opzionalmente altri nodi, contenenti parametri da elaborare (es: nella ricerca degli utenti, la stringa con cui filtrare al lista degli utenti).
-2. xml presente nelle response, generalmente formato da una lista di elementi.
+1. xml presente nelle request, generalmente formato da un nodo radice che contiene il nome dell'operazione richiesta e opzionalmente altri nodi, contenenti parametri da elaborare (es: nella ricerca degli utenti, la stringa con cui filtrare al lista degli utenti, ...).
+2. xml presente nelle response, generalmente formato da una lista di elementi (lista di utenti, lista di stati, ...)
 
 
 REALIZZAZIONE DEL SITO - Tecnologie
@@ -98,9 +98,9 @@ Computazione lato client
 
 1. PostTweetApplet. È una semplice applet che utilizza HTTPClient e ManageXML per postare un nuovo tweet.
 2. UserSearchApplet. È una applet piú complessa, formata da un campo di ricerca e un bottone, e una lista. Utilizza HTTPClient e ManageXML per richiedere la lista degli utenti che matchano la stringa inserita, e che vengono riportati nella lista. Tale applet utilizza un ListCellRenderer (UserListCellRenderer) per visualizzare in maniera piú gradevole i dati e una ImageCache per ottimizzare il download e la visualizzazione delle immagini del profilo dei vari utenti.
-3. TweetListApplet. È una applet, la computazione avviene nel seguente modo:
+3. TweetListApplet. È una applet che si comporta nel seguente modo:
  * Alla prima apertura, gli stati vengono recuperati con una richiesta.
- * Successivamente, la lista viene aggiornata attraverso un comet service.
+ * Successivamente la lista viene aggiornata attraverso un comet service, ogni qualvolta viene pubblicato un nuovo stato.
   
  La scelta di implementare le funzionalità principali come applet deriva principalmente dalla volontà di avere una esperienza utente uniforme nelle varie pagine del sito. 
 L'unica funzionalità che realmente richiedeva di essere implementata come applet è TweetListApplet, in quanto comunica col server in modo interattivo.
@@ -115,19 +115,22 @@ Computazione lato server
 
 Le servlet utilizzate sono:
 
-1. RegistrationServlet, che riceve i dati dal form di registrazione (testuali e immagine) e provvede a salvarli (db xml e directory contenente tutte le immagini).
+1. RegistrationServlet, che riceve i dati dal form di registrazione (testuali e immagine) e provvede a salvarli (db xml e directory contenente le immagini del profilo degli utenti).
+
 2. DownloadFileServlet, che prende il nome dello username dai parametri della richiesta e restituisce l'immagine del profilo corrispondente.
-3. TweetListService, che gestisce diversi tipi di operazioni, correlate agli stati:
+
+3. LoginServlet, che a seconda dell'url pattern matchato, provvede a loggare o sloggare l'utente dal sito.
+
+4. TweetListService, che gestisce diversi tipi di operazioni, correlate agli stati:
  * getTweets, che ritorna la lista dei tweets da visualizzare
  * postTweet, che permette l'inserimento
  * waitForUpdate, che innesca il meccanismo del comet service.
 
-4. UserListService, che gestisce diversi tipi di operazioni, correlate agli utenti:
+5. UserListService, che gestisce diversi tipi di operazioni, correlate agli utenti:
  * userlist, che ritorna la lista degli utenti da visualizzare
  * delete, che elimina l'utente passato come parametro
  * toggleFollow, che aggiunge/rimuove la relazione di following verso un utente.
-
-
+  
 Informazioni memorizzate sul server e scambiate sulla rete
 ----------------------------------------------------------
 
