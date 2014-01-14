@@ -12,7 +12,7 @@
         
         <div class="container">
             <h1>Tweets posted by <%= request.getParameter("username") %></h1>
-            <APPLET codebase="applet/" code="asw1013.TweetListApplet" 
+            <APPLET codebase="applet/" code="asw1013.applet.TweetListApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">

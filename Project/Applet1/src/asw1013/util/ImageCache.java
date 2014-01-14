@@ -3,7 +3,7 @@
  * subject to license terms.
  */
 
-package asw1013;
+package asw1013.util;
 
 import java.awt.Component;
 import java.awt.Graphics;

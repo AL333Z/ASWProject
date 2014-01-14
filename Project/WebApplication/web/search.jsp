@@ -14,7 +14,7 @@ and open the template in the editor.
     <body>	
         <%@ include file="/WEB-INF/jspf/navigation.jspf" %>
         <div class="container">
-            <APPLET codebase="applet/" code="asw1013.UserSearchApplet" 
+            <APPLET codebase="applet/" code="asw1013.applet.UserSearchApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 

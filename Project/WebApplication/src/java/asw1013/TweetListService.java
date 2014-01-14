@@ -6,8 +6,6 @@ import asw1013.entity.TweetList;
 import asw1013.util.UserListFile;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,7 +99,7 @@ public class TweetListService extends AbstractXmlServiceServlet {
                     	// send a notification to the client
                         OutputStream tos = asyncContext.getResponse().getOutputStream();
                         Document doc = mngXML.newDocument();
-                        Element child = doc.createElement("bubusettete");
+                        Element child = doc.createElement("");
                         doc.appendChild(child);
                         mngXML.transform(tos, doc);
                         tos.close();
@@ -138,7 +136,7 @@ public class TweetListService extends AbstractXmlServiceServlet {
                         	// send a notification to the client
                             OutputStream tos = asyncContext.getResponse().getOutputStream();
                             Document doc = mngXML.newDocument();
-                            Element child = doc.createElement("bubusettete");
+                            Element child = doc.createElement("");
                             doc.appendChild(child);
                             mngXML.transform(tos, doc);
                             tos.close();
@@ -175,7 +173,7 @@ public class TweetListService extends AbstractXmlServiceServlet {
                         	// send a notification to the client
                             OutputStream tos = asyncContext.getResponse().getOutputStream();
                             Document doc = mngXML.newDocument();
-                            Element child = doc.createElement("bubusettete");
+                            Element child = doc.createElement("");
                             doc.appendChild(child);
                             mngXML.transform(tos, doc);
                             tos.close();

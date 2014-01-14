@@ -1,5 +1,8 @@
-package asw1013;
+package asw1013.applet;
 
+import asw1013.ui.EntryListCellRenderer;
+import asw1013.HTTPClient;
+import asw1013.ManageXML;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;

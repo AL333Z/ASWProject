@@ -2,9 +2,9 @@
  * Copyright (C) 2006 Sun Microsystems, Inc. All rights reserved. Use is
  * subject to license terms.
  */
-package asw1013;
+package asw1013.ui;
 
-import asw1013.entity.User;
+import asw1013.util.ImageCache;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -28,27 +28,25 @@ import javax.swing.border.LineBorder;
  *
  * @author al333z
  */
-final class UserListCellRenderer extends JPanel implements ListCellRenderer {
-
-    private static final int LIST_CELL_ICON_SIZE = 36;
+public class EntryListCellRenderer extends JPanel implements ListCellRenderer {
 
     // ui
+    private static final int LIST_CELL_ICON_SIZE = 36;
     private JLabel userLabel = null;
     private JLabel messageLabel = null;
     private JLabel timeLabel = null;
     private JLabel imageLabel = null;
-    
-    // base url, to retrieve pics
+
+    // url to retrieve user pic
     private URL base = null;
-    
-    UserListCellRenderer(URL documentBase) {
+
+    public EntryListCellRenderer(URL documentBase) {
         base = documentBase;
-        
+
         userLabel = new JLabel(" ");
         messageLabel = new JLabel(" ");
         timeLabel = new JLabel(" ");
         imageLabel = new JLabel();
-
         imageLabel.setOpaque(true);
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -71,8 +69,7 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
                 addGroup(layout.createParallelGroup().
                         addComponent(userLabel, 10, 10, Integer.MAX_VALUE).
                         addComponent(messageLabel, 10, 10, Integer.MAX_VALUE).
-                        addComponent(timeLabel, 10, 10, Integer.MAX_VALUE)
-                );
+                        addComponent(timeLabel, 10, 10, Integer.MAX_VALUE));
 
         GroupLayout.ParallelGroup vg = layout.createParallelGroup();
         layout.setVerticalGroup(vg);
@@ -91,17 +88,18 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
     public JComponent getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
 
+        //TODO get actual object
         String user = null;
         String message = null;
         String time = null;
-        boolean following = false;
+        String img = null;
 
-        if (value instanceof User) {
-            User usr = (User) value;
-            user = usr.username;
-            message = usr.email;
-            following = !(usr.following==null);
-
+        if (value instanceof Object[]) {
+            Object values[] = (Object[]) value;
+            user = (String) values[0];
+            message = (String) values[1];
+            time = (String) values[2];
+            img = base.getPath() + "/pic?username=" + user;
         }
 
         if (user == null) {
@@ -113,14 +111,14 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         if (time == null) {
             time = "";
         }
-                
-        userLabel.setText(user);
-        messageLabel.setText(message);
+
+        userLabel.setText(message);
+        messageLabel.setText(user);
         timeLabel.setText(time);
-        
-        // get user picture, if any
+
+        // set image, if any
         try {
-            String path = new URL(base, "pic").toString()+"?username="+user;
+            String path = new URL(base, "pic").toString() + "?username=" + user;
             imageLabel.setIcon(getImageIcon(path, imageLabel.getSize()));
         } catch (Exception ex) {
             imageLabel.setIcon(null);
@@ -130,14 +128,8 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
             adjustColors(list.getSelectionBackground(),
                     list.getSelectionForeground(), this, messageLabel, userLabel);
         } else {
-            // followed user are highlighted
-            if(!following) {
-                adjustColors(list.getBackground(),
-                        list.getForeground(), this, messageLabel, userLabel);
-            } else {
-                adjustColors(Color.decode("#ffffcc"),
-                        list.getForeground(), this, messageLabel, userLabel);
-            }
+            adjustColors(list.getBackground(),
+                    list.getForeground(), this, messageLabel, userLabel);
         }
 
         return this;
@@ -150,16 +142,15 @@ final class UserListCellRenderer extends JPanel implements ListCellRenderer {
         }
     }
 
-    // utility to get picture icon
+    // utility method to get image icon of user pic
     private Icon getImageIcon(String path, Dimension size) throws Exception {
         if (path != null) {
             Image image = ImageCache.getInstance().getImage(
-                    imageLabel, new URI(path), (int)size.getWidth(), (int)size.getHeight());
+                    imageLabel, new URI(path), (int) size.getWidth(), (int) size.getHeight());
             if (image != null) {
                 return new ImageIcon(image);
             }
         }
         return null;
     }
-
 }

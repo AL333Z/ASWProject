@@ -22,7 +22,7 @@
         } else {
         %> 
         <div class="container">
-            <applet codebase="applet/" code="asw1013.PostTweetApplet"
+            <applet codebase="applet/" code="asw1013.applet.PostTweetApplet"
                     archive="Lib1.jar,Applet1.jar"
                     width=960 height=100>
                 <param name="sessionId" value="<%= session.getId()%>">
@@ -33,7 +33,7 @@
         %>
 
         <div class="container">
-            <APPLET codebase="applet/" code="asw1013.TweetListApplet" 
+            <APPLET codebase="applet/" code="asw1013.applet.TweetListApplet" 
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">
