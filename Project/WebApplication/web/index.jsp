@@ -26,6 +26,7 @@
                     archive="Lib1.jar,Applet1.jar"
                     width=960 height=100>
                 <param name="sessionId" value="<%= session.getId()%>">
+                <param name="isMainPage" value="true">
                 Applet failed to run. No Java plug-in was found.
             </applet>
         </div>
@@ -38,6 +39,7 @@
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">
+                <param name="isMainPage" value="true">
                 Applet failed to run. No Java plug-in was found.
             </APPLET>
         </div> 

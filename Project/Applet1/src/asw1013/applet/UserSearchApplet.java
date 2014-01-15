@@ -109,7 +109,7 @@ public class UserSearchApplet extends JApplet {
 
                     User usr = (User) model.getElementAt(indexToShow);
                     try {
-                        String path = new URL(getDocumentBase(), "profile.jsp").toString() + "?username=" + usr.username;
+                        String path = new URL(hc.getBase(), "jsp/profile.jsp").toString() + "?username=" + usr.username;
                         getAppletContext().showDocument(new URL(path));
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(UserSearchApplet.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,7 +119,7 @@ public class UserSearchApplet extends JApplet {
         });
 
         // list to show results
-        UserListCellRenderer renderer = new UserListCellRenderer(getDocumentBase());
+        UserListCellRenderer renderer = new UserListCellRenderer(hc.getBase());
         jlist.setCellRenderer(renderer);
         JScrollPane scrollPane = new JScrollPane(jlist);
 

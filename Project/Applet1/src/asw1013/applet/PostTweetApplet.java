@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.URL;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -18,14 +20,31 @@ public class PostTweetApplet extends JApplet {
 
     // http client
     HTTPClient hc = new HTTPClient();
-    
+
     // xml util
     ManageXML mngXML;
 
     public void init() {
         try {
             hc.setSessionId(getParameter("sessionId"));
-            hc.setBase(getDocumentBase());
+
+            if (getParameter("isMainPage") != null) {
+                hc.setBase(getDocumentBase());
+            } else {
+
+                // represent the path portion of the URL as a file
+                URL url = getDocumentBase();
+                File file = new File(url.getPath());
+
+                // get the parent of the file
+                String parentPath = file.getParent();
+
+                // construct a new url with the parent path
+                URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
+
+                hc.setBase(parentUrl);
+            }
+
             mngXML = new ManageXML();
 
             SwingUtilities.invokeAndWait(new Runnable() {
@@ -59,7 +78,8 @@ public class PostTweetApplet extends JApplet {
                     });
                 }
             });
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     private class PostTweetWorker extends SwingWorker<Void, Void> {
@@ -78,11 +98,11 @@ public class PostTweetApplet extends JApplet {
             // prepare the request xml
             Document data = mngXML.newDocument();
             Element rootReq = data.createElement("postTweet");
-            
+
             Element tweetText = data.createElement("tweetText");
             tweetText.appendChild(data.createTextNode(field.getText()));
             rootReq.appendChild(tweetText);
-            
+
             data.appendChild(rootReq);
 
             Document answer = hc.execute("tweets", data);
