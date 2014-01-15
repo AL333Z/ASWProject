@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>Registration</title>
-        <link rel="stylesheet" type="text/css" href="style-sheets/style.css" />
+        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style-sheets/style.css" />
     </head>
     <body>	
         <%@ include file="/WEB-INF/jspf/navigation.jspf" %>
@@ -26,6 +26,7 @@
                     archive="Lib1.jar,Applet1.jar"
                     width=960 height=100>
                 <param name="sessionId" value="<%= session.getId()%>">
+                Applet failed to run. No Java plug-in was found.
             </applet>
         </div>
         <%
@@ -37,7 +38,7 @@
                     archive="Lib1.jar,Applet1.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">
-
+                Applet failed to run. No Java plug-in was found.
             </APPLET>
         </div> 
     </body>

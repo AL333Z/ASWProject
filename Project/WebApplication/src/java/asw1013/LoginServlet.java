@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("isAdmin", user.isAdmin);
 
                 ServletContext context = getServletContext();
-                RequestDispatcher dispatcher = context.getRequestDispatcher("/login.jsp");
+                RequestDispatcher dispatcher = context.getRequestDispatcher("/jsp/login.jsp");
                 dispatcher.forward(request, response);
 
             } else {
@@ -62,12 +62,13 @@ public class LoginServlet extends HttpServlet {
                 session.removeAttribute("email");
 
                 ServletContext context = getServletContext();
-                RequestDispatcher dispatcher = context.getRequestDispatcher("/logout.jsp");
+                RequestDispatcher dispatcher = context.getRequestDispatcher("/jsp/logout.jsp");
                 dispatcher.forward(request, response);
 
             }
         } catch (Exception ex) {
-            throw new ServletException(ex);
+            throw new ServletException(getServletContext().getContextPath());
+//            throw new ServletException(ex);
         }
     }
 

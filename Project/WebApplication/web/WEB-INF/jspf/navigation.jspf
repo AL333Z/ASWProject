@@ -1,7 +1,7 @@
 <div class="navigation">
     <ul>
-        <li><a href="index.jsp">Share2Me</a></li>
-        <li><a href="search.jsp">Search</a></li>
+        <li><a href="<%= request.getContextPath()%>/index.jsp">Share2Me</a></li>
+        <li><a href="<%= request.getContextPath()%>/jsp/search.jsp">Search</a></li>
 
         <%
             if (session.getAttribute("isLoggedIn") != null

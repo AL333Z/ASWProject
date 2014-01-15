@@ -66,7 +66,7 @@ public class RegistrationServlet extends HttpServlet {
             oldPic.renameTo(newPic);
 
             // redirecting to main page
-            String site = new String("index.jsp");
+            String site = "index.jsp";
             response.setStatus(response.SC_OK);
             response.sendRedirect(site);
 

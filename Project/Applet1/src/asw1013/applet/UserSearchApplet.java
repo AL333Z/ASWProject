@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -26,7 +27,7 @@ public class UserSearchApplet extends JApplet {
 
     // http client to manage request
     HTTPClient hc = new HTTPClient();
-    
+
     // xml utility
     ManageXML mngXML;
 
@@ -42,7 +43,18 @@ public class UserSearchApplet extends JApplet {
         try {
             // set param to http client
             hc.setSessionId(getParameter("sessionId"));
-            hc.setBase(getDocumentBase());
+
+            // represent the path portion of the URL as a file
+            URL url = getDocumentBase();
+            File file = new File(url.getPath());
+
+            // get the parent of the file
+            String parentPath = file.getParent();
+
+            // construct a new url with the parent path
+            URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
+            
+            hc.setBase(parentUrl);
             mngXML = new ManageXML();
 
             SwingUtilities.invokeAndWait(new Runnable() {
@@ -52,7 +64,8 @@ public class UserSearchApplet extends JApplet {
                 }
             });
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void start() {
@@ -93,10 +106,10 @@ public class UserSearchApplet extends JApplet {
                 // selected user
                 int indexToShow = jlist.getSelectedIndex();
                 if (indexToShow >= 0) {
-                    
+
                     User usr = (User) model.getElementAt(indexToShow);
                     try {
-                        String path = new URL(getDocumentBase(), "profile.jsp").toString()+"?username="+usr.username;
+                        String path = new URL(getDocumentBase(), "profile.jsp").toString() + "?username=" + usr.username;
                         getAppletContext().showDocument(new URL(path));
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(UserSearchApplet.class.getName()).log(Level.SEVERE, null, ex);
