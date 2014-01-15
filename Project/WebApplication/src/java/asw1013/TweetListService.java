@@ -99,7 +99,7 @@ public class TweetListService extends AbstractXmlServiceServlet {
                     	// send a notification to the client
                         OutputStream tos = asyncContext.getResponse().getOutputStream();
                         Document doc = mngXML.newDocument();
-                        Element child = doc.createElement("");
+                        Element child = doc.createElement("refresh");
                         doc.appendChild(child);
                         mngXML.transform(tos, doc);
                         tos.close();
@@ -136,7 +136,7 @@ public class TweetListService extends AbstractXmlServiceServlet {
                         	// send a notification to the client
                             OutputStream tos = asyncContext.getResponse().getOutputStream();
                             Document doc = mngXML.newDocument();
-                            Element child = doc.createElement("");
+                            Element child = doc.createElement("refresh");
                             doc.appendChild(child);
                             mngXML.transform(tos, doc);
                             tos.close();
@@ -173,7 +173,7 @@ public class TweetListService extends AbstractXmlServiceServlet {
                         	// send a notification to the client
                             OutputStream tos = asyncContext.getResponse().getOutputStream();
                             Document doc = mngXML.newDocument();
-                            Element child = doc.createElement("");
+                            Element child = doc.createElement("refresh");
                             doc.appendChild(child);
                             mngXML.transform(tos, doc);
                             tos.close();
