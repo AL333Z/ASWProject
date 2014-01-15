@@ -64,7 +64,7 @@ public class UserListFile {
     private UserListFile(ServletContext servletContext) throws Exception {
         context = JAXBContext.newInstance(UserList.class);
         mngXML = new ManageXML();
-        userFile = new File(servletContext.getRealPath("/WEB-INF/users.xml")); // this only works with default config of tomcat
+        userFile = new File(servletContext.getRealPath("/WEB-INF/xml/users.xml")); // this only works with default config of tomcat
     }
 
     /**
@@ -207,6 +207,8 @@ public class UserListFile {
     }
 
     private void createFile() throws Exception {
+        
+        
         User admin = new User();
         admin.username = "admin";
         admin.pass = "password";

@@ -50,7 +50,7 @@ public class TweetListFile {
     private TweetListFile(ServletContext servletContext) throws Exception {
         context = JAXBContext.newInstance(TweetList.class);
         mngXML = new ManageXML();
-        tweetFile = new File(servletContext.getRealPath("/WEB-INF/tweets.xml")); // this only works with default config of tomcat
+        tweetFile = new File(servletContext.getRealPath("/WEB-INF/xml/tweets.xml")); // this only works with default config of tomcat
     }
     
     /**
