@@ -11,8 +11,6 @@ import javax.swing.ImageIcon;
  * Download and keep in memory an image until there is unused space in the JVM heap
  * 
  * This class is a singleton (only one instance per JVM is allowed).
- * 
- * @author mattia
  */
 public class SoftReferenceImageCache {
     
@@ -37,7 +35,7 @@ public class SoftReferenceImageCache {
     }
     
     /**
-     * Get an image from the cache or download it if it's not already present 
+     * Get an image from the cache or download and put in cache if it's not already present 
      */
     public Image getImage(URL imageUri){
         SoftReference<Image> imgRef = imagesMap.get(imageUri);
