@@ -62,10 +62,20 @@ public class RegistrationServlet extends HttpServlet {
             part.write(user.username);
             File oldPic = new File("/tmp/" + user.username);
             String picsDirPath = getServletContext().getRealPath("/WEB-INF/profilepics");
-            File picsDir = new File(picsDirPath);
-            picsDir.mkdirs();
+            //File picsDir = new File(picsDirPath);
+            //picsDir.mkdirs();
             File newPic = new File(picsDirPath + "/" + user.username);
-            oldPic.renameTo(newPic);
+            //oldPic.renameTo(newPic);
+            InputStream instr = new FileInputStream(oldPic);
+            OutputStream outstr = new FileOutputStream(newPic);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = instr.read(buf)) > 0) {
+                outstr.write(buf, 0, len);
+            }
+            instr.close();
+            outstr.close();
 
             ServletContext context = getServletContext();
             RequestDispatcher dispatcher = context.getRequestDispatcher("/jsp/registration.jsp");
