@@ -36,7 +36,7 @@
 
         <div class="container">
             <APPLET codebase="applet/" code="asw1013.applet.TweetListApplet" 
-                    archive="Lib1.jar,Applet1.jar" 
+                    archive="Lib1.jar,Lib2.jar,Applet2.jar" 
                     width=960 height=500>
                 <param name="sessionId" value="<%= session.getId()%>">
                 <param name="isMainPage" value="true">
