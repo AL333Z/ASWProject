@@ -16,7 +16,7 @@ and open the template in the editor.
         <div class="container">
             <APPLET codebase="../applet/" code="asw1013.applet.UserSearchApplet" 
                     archive="Lib1.jar,Lib2.jar,Applet3.jar" 
-                    width=960 height=500>
+                    width=1000 height=500>
                 
                 <param name="sessionId" value="<%= session.getId()%>">
                 <param name="isLoggedIn" value="<%= (session.getAttribute("isLoggedIn") != null && ((Boolean)session.getAttribute("isLoggedIn")) == true) ? "Y" : "N" %>">
