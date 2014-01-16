@@ -4,7 +4,6 @@
  */
 package asw1013.ui;
 
-import asw1013.util.ImageCache;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -145,8 +144,7 @@ public class EntryListCellRenderer extends JPanel implements ListCellRenderer {
     // utility method to get image icon of user pic
     private Icon getImageIcon(String path, Dimension size) throws Exception {
         if (path != null) {
-            Image image = ImageCache.getInstance().getImage(
-                    imageLabel, new URI(path), (int) size.getWidth(), (int) size.getHeight());
+            Image image = SoftReferenceImageCache.getInstance().getImage(new URL(path));
             if (image != null) {
                 return new ImageIcon(image);
             }
