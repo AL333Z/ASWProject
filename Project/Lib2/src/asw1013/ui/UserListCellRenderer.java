@@ -4,12 +4,10 @@
  */
 package asw1013.ui;
 
-import asw1013.util.ImageCache;
 import asw1013.entity.User;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.net.URI;
 import java.net.URL;
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
@@ -154,8 +152,7 @@ public class UserListCellRenderer extends JPanel implements ListCellRenderer {
     // utility to get picture icon
     private Icon getImageIcon(String path, Dimension size) throws Exception {
         if (path != null) {
-            Image image = ImageCache.getInstance().getImage(
-                    imageLabel, new URI(path), (int)size.getWidth(), (int)size.getHeight());
+            Image image = SoftReferenceImageCache.getInstance().getImage(new URL(path));
             if (image != null) {
                 return new ImageIcon(image);
             }
