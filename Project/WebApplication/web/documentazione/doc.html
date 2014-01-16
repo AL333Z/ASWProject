@@ -133,7 +133,8 @@ limitations under the License.
 
         <h2>Computazione lato server</h2>
 
-        <p>Le servlet utilizzate sono:</p>
+        <p>Per la gestione delle richieste HTTP e per la creazione di servizi 
+            interoperabili vengono utilizzate le seguenti servlet:</p>
 
         <ol>
             <li>RegistrationServlet, che provvede alla registrazione di un
@@ -147,7 +148,7 @@ limitations under the License.
                 operazione legate alla gestione degli utenti.</li>
         </ol>
 
-        <p>È compresa nelle seguenti JSP:</p>
+        <p>Per la gestione e la visualizzazione delle pagine HTML vengono utilizzate le seguenti JSP:</p>
 
         <ol>
             <li>index.jsp, che è la pagina principale dell'applicazione. Se
@@ -164,6 +165,9 @@ limitations under the License.
             <li>search.jsp, che permette all'utente di cercare altri utenti,
                 di aggiungerli ai suoi following e di visualizzarne il profilo.</li>
         </ol>
+
+        <p>Per l'inclusione di frammenti di codice vengono inoltre utilizzati diversi file jspf.</p>
+        <p>Per il marshaling/unmarshaling dei dati da xml a oggetti java ci si avvale della tecnologia JAXB.</p>
 
         <h2>Informazioni memorizzate sul server e scambiate sulla rete</h2>
 
@@ -213,15 +217,15 @@ limitations under the License.
                 in maniera piú gradevole i dati e una ImageCache per ottimizzare il
                 download e la visualizzazione delle immagini del profilo dei vari
                 utenti.</li>
-
-            <p>La scelta di implementare le funzionalità principali come
-                applet deriva principalmente dalla volontà di avere una esperienza
-                utente uniforme nelle varie pagine del sito. L'unica funzionalità
-                che realmente richiedeva di essere implementata come applet è
-                TweetListApplet, in quanto comunica col server in modo interattivo.
-            </p>
-
         </ol>
+        <p>La scelta di implementare le funzionalità principali come
+            applet deriva principalmente dalla volontà di avere una esperienza
+            utente uniforme nelle varie pagine del sito. L'unica funzionalità
+            che realmente richiedeva di essere implementata come applet è
+            TweetListApplet, in quanto comunica col server in modo interattivo.
+        </p>
+
+
 
         <h2>Computazione lato server</h2>
 
