@@ -133,6 +133,20 @@ limitations under the License.
 
         <h2>Computazione lato server</h2>
 
+        <p>Le servlet utilizzate sono:</p>
+
+        <ol>
+            <li>RegistrationServlet, che provvede alla registrazione di un
+                nuovo utente (che puó anche inserire una foto del profilo).</li>
+            <li>LoginServlet, che provvede al login/logout degli utenti.</li>
+            <li>DownloadFileServlet, che provvede a restituire la foto del
+                profilo a partire da uno username.</li>
+            <li>TweetListService (XML over HTTP), che racchiude tutte le
+                operazioni legate alla gestione degli stati condivisi.</li>
+            <li>UserListService (XML over HTTP), che racchiude tutte le
+                operazione legate alla gestione degli utenti.</li>
+        </ol>
+
         <p>È compresa nelle seguenti JSP:</p>
 
         <ol>
@@ -142,27 +156,13 @@ limitations under the License.
                 l'utente non è loggato, propone i form di registrazione e login, e
                 mostra all'utente gli ultimi post provenienti dalla totalità degli
                 utenti registrati.</li>
-            <li>login.jsp, che verifica le credenziali dell'utente e lo
-                redirige alla pagina principale.</li>
-            <li>logout.jsp, che slogga l'utente e lo redirige alla pagina
-                principale.</li>
+            <li>login.jsp, che redirige alla pagina principale, dopo l'avvenuto login.</li>
+            <li>logout.jsp, che redirige alla pagina principale, dopo l'avvenuto logout.</li>
+            <li>registration.jsp, che redirige alla pagina principale, dopo l'avvenuta registrazione.</li>
             <li>profile.jsp, che mostra il profilo (tutti gli stati postati)
                 dell'utente selezionato.</li>
             <li>search.jsp, che permette all'utente di cercare altri utenti,
                 di aggiungerli ai suoi following e di visualizzarne il profilo.</li>
-        </ol>
-
-        <p>Le servlet utilizzate sono:</p>
-
-        <ol>
-            <li>RegistrationServlet, che provvede alla registrazione di un
-                nuovo utente (che puó anche inserire una foto del profilo).</li>
-            <li>DownloadFileServlet, che provvede a restituire la foto del
-                profilo a partire da uno username.</li>
-            <li>TweetListService (XML over HTTP), che racchiude tutte le
-                operazioni legate alla gestione degli stati condivisi.</li>
-            <li>UserListService (XML over HTTP), che racchiude tutte le
-                operazione legate alla gestione degli utenti.</li>
         </ol>
 
         <h2>Informazioni memorizzate sul server e scambiate sulla rete</h2>
@@ -237,6 +237,8 @@ limitations under the License.
                 la possibilita' di inserire un nuovo post e di visualizzare lo stream
                 di tweet dei suo following.</li>
             <li>logout.jsp, viene invocata dalla servlet LoginServlet (MVC)
+                ed esegue il redirect alla pagina principale.</li>
+            <li>registation.jsp, viene invocata dalla servlet RegistrationServlet (MVC)
                 ed esegue il redirect alla pagina principale.</li>
             <li>profile.jsp, prende come parametro uno username, e mostra lo
                 stream dei suoi tweet, incorporando l'applet TweetListApplet, a cui

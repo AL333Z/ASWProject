@@ -9,6 +9,8 @@ import asw1013.util.UserListFile;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
@@ -40,7 +42,7 @@ public class RegistrationServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
 
             Part part = request.getPart("file");
-            
+
             User user = new User();
             user.email = request.getParameter("emailsignup");
             user.pass = request.getParameter("passwordsignup");
@@ -58,17 +60,16 @@ public class RegistrationServlet extends HttpServlet {
 
             // save the pic with username
             part.write(user.username);
-            File oldPic = new File("/tmp/"+user.username);
+            File oldPic = new File("/tmp/" + user.username);
             String picsDirPath = getServletContext().getRealPath("/WEB-INF/profilepics");
             File picsDir = new File(picsDirPath);
             picsDir.mkdirs();
-            File newPic = new File(picsDirPath+"/"+user.username);
+            File newPic = new File(picsDirPath + "/" + user.username);
             oldPic.renameTo(newPic);
 
-            // redirecting to main page
-            String site = "index.jsp";
-            response.setStatus(response.SC_OK);
-            response.sendRedirect(site);
+            ServletContext context = getServletContext();
+            RequestDispatcher dispatcher = context.getRequestDispatcher("/jsp/registration.jsp");
+            dispatcher.forward(request, response);
 
         } catch (Exception ex) {
             Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
