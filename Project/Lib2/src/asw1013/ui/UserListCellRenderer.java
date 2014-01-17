@@ -119,7 +119,7 @@ public class UserListCellRenderer extends JPanel implements ListCellRenderer {
         
         // get user picture, if any
         try {
-            String path = new URL(base+"/pic").toString()+"?username="+user;
+            String path = "http://si-tomcat.csr.unibo.it:8080/~mattia.baldani/pic?username="+user;
             imageLabel.setIcon(getImageIcon(path, imageLabel.getSize()));
         } catch (Exception ex) {
             imageLabel.setIcon(null);
