@@ -39,32 +39,53 @@ public class UserSearchApplet extends JApplet {
     JButton profileBtn;
 
     public void init() {
-
+        
         try {
-            // set param to http client
-            hc.setSessionId(getParameter("sessionId"));
-
-            // represent the path portion of the URL as a file
-            URL url = getDocumentBase();
-            File file = new File(url.getPath());
-
-            // get the parent of the file
-            String parentPath = file.getParent();
-
-            // construct a new url with the parent path
-            URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
-            
-            hc.setBase(parentUrl);
-            mngXML = new ManageXML();
 
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
+
                     initUi();
+                    
+                    try {
+                        // represent the path portion of the URL as a file
+                        URL url = getDocumentBase();
+                        File file = new File(url.getPath());
+
+                        // get the parent of the file
+                        String parentPath = file.getParent();
+
+                        // construct a new url with the parent path
+                        URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
+                        
+                        String parentUrlStr = parentUrl.toString();
+                        if(parentUrlStr.endsWith("jsp")){
+                            parentUrlStr = parentUrlStr.substring(parentUrlStr.length()-4, parentUrlStr.length()-1);
+                            //parentUrl = new URL(parentUrlStr);
+                        }
+                        
+                        hc.setBase(new URL("http://si-tomcat.csr.unibo.it:8080/~mattia.baldani"));
+                        //hc.setBase(parentUrl);
+                        
+                        //field.setText(parentUrl.toString());
+                    } catch (Exception e) {
+
+                    }
+
+                    
                 }
             });
 
+            // set param to http client
+            hc.setSessionId(getParameter("sessionId"));
+            
+            mngXML = new ManageXML();
+
+            
+
         } catch (Exception e) {
+            
         }
     }
 
@@ -109,7 +130,7 @@ public class UserSearchApplet extends JApplet {
 
                     User usr = (User) model.getElementAt(indexToShow);
                     try {
-                        String path = new URL(hc.getBase(), "jsp/profile.jsp").toString() + "?username=" + usr.username;
+                        String path = new URL(hc.getBase()+"/jsp/profile.jsp").toString() + "?username=" + usr.username;
                         getAppletContext().showDocument(new URL(path));
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(UserSearchApplet.class.getName()).log(Level.SEVERE, null, ex);
@@ -164,7 +185,7 @@ public class UserSearchApplet extends JApplet {
 
     // get users
     private NodeList getUsers(String st) throws Exception {
-
+        
         mngXML = new ManageXML();
         Document data = mngXML.newDocument();
 
@@ -179,8 +200,11 @@ public class UserSearchApplet extends JApplet {
         rootReq.appendChild(searchTerm);
         data.appendChild(rootReq);
 
+        //field.setText(new URL(hc.getBase().toString()+"/users").toString());
+        
         Document answer = hc.execute("users", data);
         NodeList userList = answer.getElementsByTagName("users");
+        
         return userList;
     }
 
@@ -201,6 +225,7 @@ public class UserSearchApplet extends JApplet {
 
         @Override
         protected void process(java.util.List<NodeList> chunks) {
+            
             // clean the list
             model.removeAllElements();
 

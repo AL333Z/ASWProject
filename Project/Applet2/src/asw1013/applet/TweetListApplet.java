@@ -46,7 +46,7 @@ public class TweetListApplet extends JApplet {
             hc.setSessionId(getParameter("sessionId"));
 
             if (getParameter("isMainPage") != null) {
-                hc.setBase(getDocumentBase());
+                //hc.setBase(getDocumentBase());
             } else {
 
                 // represent the path portion of the URL as a file
@@ -59,8 +59,10 @@ public class TweetListApplet extends JApplet {
                 // construct a new url with the parent path
                 URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
 
-                hc.setBase(parentUrl);
+                //hc.setBase(parentUrl);
             }
+            
+            hc.setBase(new URL("http://si-tomcat.csr.unibo.it:8080/~mattia.baldani"));
 
             mngXML = new ManageXML();
 

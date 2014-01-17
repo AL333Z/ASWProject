@@ -117,7 +117,7 @@ public class EntryListCellRenderer extends JPanel implements ListCellRenderer {
 
         // set image, if any
         try {
-            String path = new URL(base, "pic").toString() + "?username=" + user;
+            String path = new URL(base+"/pic").toString() + "?username=" + user;
             imageLabel.setIcon(getImageIcon(path, imageLabel.getSize()));
         } catch (Exception ex) {
             imageLabel.setIcon(null);

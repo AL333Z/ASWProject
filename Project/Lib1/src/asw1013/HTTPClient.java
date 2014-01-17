@@ -31,7 +31,7 @@ public class HTTPClient {
     public Document execute(String address, Document data) throws TransformerException, ParserConfigurationException, SAXException, IOException, MalformedURLException {
         ManageXML manageXML = new ManageXML();
 
-        HttpURLConnection connection = (HttpURLConnection) new URL(base, address).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(base.toString()+"/"+address).openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
 
