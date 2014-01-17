@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
-
+    
 /**
  *
  * @author al333z
@@ -59,16 +59,9 @@ public class UserSearchApplet extends JApplet {
                         // construct a new url with the parent path
                         URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
                         
-                        String parentUrlStr = parentUrl.toString();
-                        if(parentUrlStr.endsWith("jsp")){
-                            parentUrlStr = parentUrlStr.substring(parentUrlStr.length()-4, parentUrlStr.length()-1);
-                            //parentUrl = new URL(parentUrlStr);
-                        }
+                        hc.setBase(parentUrl);
                         
-                        hc.setBase(new URL("http://si-tomcat.csr.unibo.it:8080/~mattia.baldani"));
-                        //hc.setBase(parentUrl);
                         
-                        //field.setText(parentUrl.toString());
                     } catch (Exception e) {
 
                     }
@@ -199,8 +192,6 @@ public class UserSearchApplet extends JApplet {
         // build the xml
         rootReq.appendChild(searchTerm);
         data.appendChild(rootReq);
-
-        //field.setText(new URL(hc.getBase().toString()+"/users").toString());
         
         Document answer = hc.execute("users", data);
         NodeList userList = answer.getElementsByTagName("users");
